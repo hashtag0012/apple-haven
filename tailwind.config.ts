@@ -9,6 +9,11 @@ const config: Config = {
     "./src/**/*.{ts,tsx}",
     "*.{js,ts,jsx,tsx,mdx}"
   ],
+  safelist: [
+    'fade-in-section',
+    'fade-in-visible',
+    'delay-300'
+  ],
   theme: {
   	extend: {
   		fontFamily: {

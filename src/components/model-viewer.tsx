@@ -19,6 +19,15 @@ const isLowEndDevice = () => {
   );
 };
 
+const isVeryLowEndDevice = () => {
+  if (typeof window === 'undefined') return false;
+  // Even lower threshold for fallback: very low core count or very small screens
+  return (
+    (navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 2) ||
+    window.innerWidth < 500
+  );
+};
+
 type ModelViewerProps = {
   modelUrls: string[];
   className?: string;
@@ -32,8 +41,15 @@ const ModelViewer: React.FC<ModelViewerProps> = ({ modelUrls, className, onLoade
   const [error, setError] = useState<string | null>(null);
   // Animations are now enabled by default for all devices
   const [animationsEnabled, setAnimationsEnabled] = useState(true);
+  const [showFallback, setShowFallback] = useState(false);
 
   useEffect(() => {
+    if (typeof window !== 'undefined' && isVeryLowEndDevice()) {
+      setShowFallback(true);
+      setIsLoading(false);
+      setError(null);
+      return;
+    }
     if (!modelUrls || modelUrls.length === 0) {
       setIsLoading(false);
       setError(null);
@@ -57,8 +73,8 @@ const ModelViewer: React.FC<ModelViewerProps> = ({ modelUrls, className, onLoade
     try {
       // Scene
       const scene = new THREE.Scene();
-      scene.background = new THREE.Color(0x2c1810); // Warm chocolate brown background for aesthetic appeal
-      scene.fog = new THREE.Fog(0x2c1810, 10, 50);
+      // scene.background = new THREE.Color(0x2c1810); // Removed for transparent background
+      // scene.fog = new THREE.Fog(0x2c1810, 10, 50); // Removed for transparent background
 
       // 5 Lighting sources for enhanced visual quality
       // Ambient light for overall illumination
@@ -241,10 +257,23 @@ const ModelViewer: React.FC<ModelViewerProps> = ({ modelUrls, className, onLoade
 
   return (
     <div
-      className={cn("relative w-full h-full border-2 border-dashed rounded-lg overflow-hidden bg-muted/40 shadow-inner", className)}
+      // Make the 3D model fill the parent section
+      className={cn("relative w-full h-full border-2 border-dashed rounded-lg overflow-hidden shadow-inner", className)}
     >
+      {/* Fallback image for very low-end/unsupported devices */}
+      {showFallback ? (
+        <div className="w-full h-full flex flex-col items-center justify-center bg-background/80">
+          <img
+            src="/images/1_UjtUj9B7PqGvTWNuRll0Vw.jpg"
+            alt="Fallback for 3D model"
+            className="w-full h-full object-cover rounded-lg"
+            loading="lazy"
+          />
+          <p className="mt-4 text-lg text-muted-foreground">3D model not supported on this device.</p>
+        </div>
+      ) : (
+        <>
       <div ref={mountRef} className="w-full h-full outline-none"></div>
-      
       {/* Performance Toggle Button */}
       <button
         onClick={() => setAnimationsEnabled(!animationsEnabled)}
@@ -252,7 +281,6 @@ const ModelViewer: React.FC<ModelViewerProps> = ({ modelUrls, className, onLoade
       >
         {animationsEnabled ? "Disable Animations" : "Enable Animations"}
       </button>
-      
       {isLoading && (
         <div className="absolute inset-0 flex flex-col items-center justify-center bg-background/80 backdrop-blur-sm transition-opacity">
           <Loader2 className="h-12 w-12 animate-spin text-primary" />
@@ -270,6 +298,8 @@ const ModelViewer: React.FC<ModelViewerProps> = ({ modelUrls, className, onLoade
           <Box className="h-24 w-24 text-muted-foreground/20" />
           <p className="mt-4 text-xl text-muted-foreground">Enter a model URL to view</p>
         </div>
+          )}
+        </>
       )}
     </div>
   );

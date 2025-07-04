@@ -4,15 +4,12 @@ import type React from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { MapPin, Phone, Mail, Clock, Car, Plane } from "lucide-react"
 import Image from "next/image"
+import { useRef } from "react"
 import { MultiLineTypewriter } from "./ui/multi-line-typewriter"
 
 export function ContactSection() {
-  const sectionTitle = [
-    {
-      text: "Contact Us",
-      className: "text-5xl font-bold bg-gradient-to-r from-red-600 via-orange-400 to-emerald-500 bg-clip-text text-transparent mb-4 font-display"
-    },
-  ]
+  const headingRef = useRef<HTMLHeadingElement>(null);
+  const descRef = useRef<HTMLParagraphElement>(null);
 
   return (
     <div className="min-h-screen pt-20 pb-16 relative overflow-hidden">
@@ -20,19 +17,20 @@ export function ContactSection() {
       <Image
         src="/decorations/Screenshot 2025-06-25 010036 (1) (1) (1).png"
         alt="Contact Us Background"
-        layout="fill"
-        objectFit="cover"
-        className="z-0 opacity-30"
+        fill
+        style={{ objectFit: 'cover' }}
+        className="z-0 opacity-30 animate-fade-in"
         priority
       />
       <div className="absolute inset-0 bg-black/40 z-0" />
       <div className="container mx-auto px-4 relative z-10">
         {/* Header */}
         <div className="text-center mb-16">
-          <MultiLineTypewriter lines={sectionTitle} loop={false} />
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            Get in touch with us for reservations, inquiries, or to plan your perfect Kashmir getaway. Our team is here
-            to help make your stay unforgettable.
+          <h1 ref={headingRef} className="text-5xl font-bold text-black mb-4 font-display">
+            <MultiLineTypewriter lines={[{ text: "Contact Us", className: "" }]} />
+          </h1>
+          <p ref={descRef} className="text-xl text-gray-600 max-w-3xl mx-auto">
+            <MultiLineTypewriter lines={[{ text: "For bookings, questions, or special requests, please reach out to us. We look forward to welcoming you!", className: "" }]} />
           </p>
         </div>
 
@@ -51,7 +49,7 @@ export function ContactSection() {
                   <p className="text-gray-600">
                     Apple Haven Inn
                     <br />
-                    Reshur Gulmarg, Kashmir Valley
+                    Reram Gulmarg, Kashmir Valley
                     <br />
                     Jammu & Kashmir 193403, India
                   </p>
@@ -117,27 +115,6 @@ export function ContactSection() {
                     Free parking available
                   </p>
                 </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Emergency Contacts */}
-          <Card className="shadow-xl border-0 bg-gradient-to-r from-red-600 to-orange-500 text-white">
-            <CardHeader>
-              <CardTitle className="text-3xl text-center">Emergency Contacts</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div>
-                <h3 className="font-semibold">24/7 Emergency Hotline</h3>
-                <p className="text-orange-100">+91 194 xxx xxxx</p>
-              </div>
-              <div>
-                <h3 className="font-semibold">Local Police</h3>
-                <p className="text-orange-100">100</p>
-              </div>
-              <div>
-                <h3 className="font-semibold">Medical Emergency</h3>
-                <p className="text-orange-100">108</p>
               </div>
             </CardContent>
           </Card>

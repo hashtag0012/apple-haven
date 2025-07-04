@@ -9,14 +9,14 @@ export function LoadingScreen({ onFinish }: { onFinish?: () => void }) {
   const timeoutRef = useRef<NodeJS.Timeout | null>(null)
 
   useEffect(() => {
-    // Pop up for 9.3s, then slide out right for 0.7s (total 10s)
+    // Pop up for 4.3s, then slide out right for 0.7s (total 5s)
     timeoutRef.current = setTimeout(() => {
       setSlideOut(true)
       // After slide out, call onFinish
       setTimeout(() => {
         onFinish?.()
       }, 700) // match slide out duration
-    }, 9300)
+    }, 4300)
 
     const dotsInterval = setInterval(() => {
       setDots((prev) => (prev.length < 3 ? prev + "." : "."))

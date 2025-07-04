@@ -16,12 +16,21 @@ import { useState } from "react"
 
 interface BookingModalProps {
   onClose: () => void
+  selectedRoom?: string | null
 }
 
-export function BookingModal({ onClose }: BookingModalProps) {
+export function BookingModal({ onClose, selectedRoom }: BookingModalProps) {
   const [state, action, isPending] = useActionState(submitBooking, null)
   const [checkInDate, setCheckInDate] = useState<Date>()
   const [checkOutDate, setCheckOutDate] = useState<Date>()
+  const [roomType, setRoomType] = useState<string | undefined>(() => {
+    if (!selectedRoom) return undefined;
+    if (selectedRoom.includes("Orchard View Deluxe")) return "deluxe";
+    if (selectedRoom.includes("Apple Blossom Suite")) return "premium";
+    if (selectedRoom.includes("Heritage Royal Suite")) return "royal";
+    if (selectedRoom.includes("Presidential")) return "presidential";
+    return undefined;
+  });
 
   return (
     <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4 animate-fade-in">
@@ -63,20 +72,6 @@ export function BookingModal({ onClose }: BookingModalProps) {
               </div>
             </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="address" className="text-red-800 font-semibold">
-                Address *
-              </Label>
-              <Textarea
-                id="address"
-                name="address"
-                required
-                className="border-red-200 focus:border-red-500"
-                placeholder="Enter your complete address"
-                rows={3}
-              />
-            </div>
-
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label className="text-red-800 font-semibold">Check-in Date *</Label>
@@ -116,7 +111,7 @@ export function BookingModal({ onClose }: BookingModalProps) {
                 <Label htmlFor="roomType" className="text-red-800 font-semibold">
                   Room Type *
                 </Label>
-                <Select name="roomType" required>
+                <Select name="roomType" required value={roomType} onValueChange={setRoomType}>
                   <SelectTrigger className="border-red-200">
                     <SelectValue placeholder="Select room type" />
                   </SelectTrigger>
@@ -124,7 +119,6 @@ export function BookingModal({ onClose }: BookingModalProps) {
                     <SelectItem value="deluxe">Orchard View Deluxe - ₹4,500/night</SelectItem>
                     <SelectItem value="premium">Apple Blossom Suite - ₹7,500/night</SelectItem>
                     <SelectItem value="royal">Heritage Royal Suite - ₹12,000/night</SelectItem>
-                    <SelectItem value="presidential">Apple Haven Presidential - ₹20,000/night</SelectItem>
                   </SelectContent>
                 </Select>
               </div>

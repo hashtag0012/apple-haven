@@ -1,206 +1,240 @@
 "use client"
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel"
+import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { Wifi, Coffee, Mountain, Users, Bed, Tv, Wind, ChevronLeft, ChevronRight } from "lucide-react"
+import { Wifi, Mountain, Users, Bed, Tv, Wind, Coffee, ClipboardCheck } from "lucide-react"
 import Image from "next/image"
-import { useState } from "react"
-import { BookingModal } from "@/components/booking-modal"
+import { useState, useRef } from "react"
+import { BookingModal } from "./booking-modal"
 import { MultiLineTypewriter } from "./ui/multi-line-typewriter"
 
-const rooms = [
-  {
-    title: "Deluxe Orchard View",
-    description: "Cozy room with a stunning view of the apple orchards.",
-    image: [
-      "/decorations/Screenshot 2025-06-26 202841.png",
-      "/decorations/Screenshot 2025-06-26 202957.png",
-      "/decorations/Screenshot 2025-06-26 202934.png",
-      "/decorations/Screenshot 2025-06-26 202910.png",
-    ],
-    price: "150",
-    features: ["1 King Bed", "Sleeps 2", "300 sq. ft."],
-    comingSoon: false,
-  },
-  {
-    title: "More Rooms",
-    description: "New and exciting rooms are under preparation. Stay tuned for more options!",
-    image: "/placeholder.jpg",
-    price: "",
-    features: [],
-    comingSoon: true,
-  },
-  {
-    title: "More Rooms",
-    description: "New and exciting rooms are under preparation. Stay tuned for more options!",
-    image: "/placeholder.jpg",
-    price: "",
-    features: [],
-    comingSoon: true,
-  },
-]
-
-const roomFeatures = [
-  { icon: Wifi, title: "High-Speed Wi-Fi", desc: "Stay connected with our complimentary Wi-Fi" },
-  { icon: Mountain, title: "Scenic Views", desc: "Breathtaking views of the mountains and valleys" },
-  { icon: Wind, title: "Climate Control", desc: "Individually controlled heating and cooling" },
-  { icon: Tv, title: "Flat Screen TV", desc: "Enjoy a wide range of channels" },
-]
-
 export function RoomsSection() {
-  const [showBookingModal, setShowBookingModal] = useState(false)
-  const [deluxeImageIdx, setDeluxeImageIdx] = useState(0)
-  const openBooking = () => setShowBookingModal(true)
-  const closeBooking = () => setShowBookingModal(false)
+  const [bookingOpen, setBookingOpen] = useState(false)
+  const [selectedRoom, setSelectedRoom] = useState<string | null>(null)
 
-  const sectionTitle = [
+  const rooms = [
     {
-      text: "Our Rooms",
-      className: "text-4xl font-bold tracking-tight font-display",
+      id: 1,
+      name: "Orchard View Deluxe",
+      price: "₹4,500",
+      image: "/placeholder.svg?height=400&width=600&text=Orchard+View+Room",
+      description: "Cozy room with stunning apple orchard views and traditional Kashmiri decor.",
+      size: "25 sqm",
+      occupancy: "2 guests",
+      amenities: [
+        "Apple orchard view",
+        "Traditional Kashmiri carpet",
+        "Wooden furniture",
+        "Complimentary breakfast"
+      ],
     },
-  ]
+    {
+      id: 2,
+      name: "Apple Blossom Suite",
+      price: "₹7,500",
+      image: "/placeholder.svg?height=400&width=600&text=Apple+Blossom+Suite",
+      description: "Spacious suite with panoramic mountain views and luxury amenities.",
+      size: "40 sqm",
+      occupancy: "3 guests",
+      amenities: [
+        "Panoramic mountain view",
+        "Separate living area",
+        "Premium bedding",
+        "Private balcony",
+        "Mini bar"
+      ],
+    },
+    {
+      id: 3,
+      name: "Heritage Royal Suite",
+      price: "₹12,000",
+      images: [
+        "/images/WhatsApp Image 2025-06-29 at 16.01.44_9ab931a8.jpg",
+        "/images/WhatsApp Image 2025-06-29 at 16.01.44_a20e0aec.jpg",
+        "/images/WhatsApp Image 2025-06-29 at 16.01.39_bb472265.jpg",
+        "/images/WhatsApp Image 2025-06-29 at 16.01.44_8bd677ed.jpg"
+      ],
+      description: "Luxurious suite with antique furnishings and breathtaking valley views.",
+      size: "60 sqm",
+      occupancy: "4 guests",
+      amenities: [
+        "Antique Kashmiri furniture",
+        "Private balcony",
+        "Valley views",
+        "Fireplace",
+        "Butler service"
+      ],
+    },
+  ];
 
-  // Helper for deluxe room image navigation
-  const deluxeImages = Array.isArray(rooms[0].image) ? rooms[0].image : []
-  const handlePrev = () => setDeluxeImageIdx((prev) => (prev - 1 + deluxeImages.length) % deluxeImages.length)
-  const handleNext = () => setDeluxeImageIdx((prev) => (prev + 1) % deluxeImages.length)
+  const roomFeatures = [
+    { icon: Wifi, title: "High-Speed Wi-Fi", desc: "Stay connected with our complimentary Wi-Fi" },
+    { icon: Mountain, title: "Scenic Views", desc: "Breathtaking views of the mountains and valleys" },
+    { icon: Wind, title: "Climate Control", desc: "Individually controlled heating and cooling" },
+    { icon: Tv, title: "Flat Screen TV", desc: "Enjoy a wide range of channels" },
+  ];
+
+  const amenityIcons: { [key: string]: React.ReactNode } = {
+    "Free WiFi": <Wifi className="w-4 h-4 mr-1" />,
+    "Mountain View": <Mountain className="w-4 h-4 mr-1" />,
+    "Heater": <Wind className="w-4 h-4 mr-1" />,
+    "TV": <Tv className="w-4 h-4 mr-1" />,
+    "Private Bathroom": <Bed className="w-4 h-4 mr-1" />,
+    "Balcony": <Mountain className="w-4 h-4 mr-1" />,
+    "Mini Bar": <Coffee className="w-4 h-4 mr-1" />,
+    "Valley View": <Mountain className="w-4 h-4 mr-1" />,
+    "Fireplace": <Wind className="w-4 h-4 mr-1" />,
+    "Butler Service": <Users className="w-4 h-4 mr-1" />,
+  };
+
+  const headingRef = useRef<HTMLHeadingElement>(null);
+  const descRef = useRef<HTMLParagraphElement>(null);
 
   return (
-    <section id="rooms" className="relative py-20 text-white overflow-hidden" style={{ backgroundColor: '#000000' }}>
-         {/* Background Design */}
-         <div className="absolute inset-0 z-0 opacity-20">
+    <div className="relative py-32 bg-black text-white overflow-hidden">
+      {/* Background Texture - covers the bottom of the section */}
+      <div className="absolute inset-0 z-0 min-h-full">
         <Image
-          src="/decorations/Untitled (1).jpeg"
+          src="/images/1_UjtUj9B7PqGvTWNuRll0Vw.jpg"
           alt="background design"
-          layout="fill"
-          objectFit="cover"
-          className="bg-design-mask bg-design-blend"
+          fill
+          style={{ objectFit: "cover", objectPosition: "center top" }}
         />
-        <div className="absolute inset-0 bg-design-overlay"></div>
+        {/* Existing gradient overlay for bottom fade */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black via-black/80 to-transparent"></div>
       </div>
-      
+
       <div className="container mx-auto px-4 relative z-10">
-        <div className="text-center mb-12">
-          <MultiLineTypewriter lines={sectionTitle} loop={false} />
-          <p className="mt-4 text-lg text-gray-300">
-            Each room offers a unique blend of traditional Kashmiri craftsmanship and modern luxury.
+        <div className="text-center mb-16">
+          <h1 ref={headingRef} className="text-4xl md:text-5xl font-bold text-white tracking-tight">
+            <MultiLineTypewriter lines={[{ text: "Our Rooms & Suites", className: "" }]} />
+          </h1>
+          <p ref={descRef} className="mt-4 text-lg text-gray-300 max-w-2xl mx-auto">
+            <MultiLineTypewriter lines={[{ text: "Experience Kashmiri hospitality in our beautifully designed accommodations, where comfort meets tradition.", className: "" }]} />
           </p>
         </div>
-        <Carousel
-          opts={{
-            align: "start",
-          }}
-          className="w-full"
-        >
-          <CarouselContent>
-            {rooms.map((room, index) => (
-              <CarouselItem key={index} className="md:basis-1/2 lg:basis-1/3">
-                <div className="p-1">
-                  <Card
-                    className={`bg-white/10 backdrop-blur-sm border-gray-700 text-white ${
-                      room.comingSoon ? "relative" : ""
-                    }`}
-                  >
-                    <CardHeader>
-                      {/* If deluxe room, show mini-carousel */}
-                      {index === 0 && Array.isArray(room.image) ? (
-                        <div className="relative w-full h-[400px]">
-                          <Image
-                            src={room.image[deluxeImageIdx]}
-                            alt={room.title}
-                            fill
-                            className="object-cover rounded-t-lg"
-                            style={{ objectPosition: 'center' }}
-                          />
-                          {/* Left arrow */}
-                          <button
-                            onClick={handlePrev}
-                            className="absolute left-2 top-1/2 -translate-y-1/2 bg-black/40 hover:bg-black/70 text-white rounded-full p-2 z-10"
-                            aria-label="Previous image"
-                            type="button"
-                          >
-                            <ChevronLeft className="w-6 h-6" />
-                          </button>
-                          {/* Right arrow */}
-                          <button
-                            onClick={handleNext}
-                            className="absolute right-2 top-1/2 -translate-y-1/2 bg-black/40 hover:bg-black/70 text-white rounded-full p-2 z-10"
-                            aria-label="Next image"
-                            type="button"
-                          >
-                            <ChevronRight className="w-6 h-6" />
-                          </button>
-                          {/* Dots indicator */}
-                          <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1">
-                            {room.image.map((_, i) => (
-                              <span
-                                key={i}
-                                className={`inline-block w-2 h-2 rounded-full ${i === deluxeImageIdx ? 'bg-white' : 'bg-white/40'}`}
-                              />
-                            ))}
-                          </div>
-                        </div>
-                      ) : (
-                        <Image
-                          src={room.image}
-                          alt={room.title}
-                          width={600}
-                          height={400}
-                          className={`rounded-t-lg object-cover ${room.comingSoon ? "filter blur-sm" : ""}`}
-                        />
-                      )}
-                      <CardTitle className="pt-4">{room.title}</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <p className="text-gray-400">{room.description}</p>
-                      {!room.comingSoon && (
-                        <>
-                          <div className="flex justify-between items-center mt-4">
-                            <p className="text-lg font-bold">${room.price}/night</p>
-                            <button
-                              onClick={openBooking}
-                              className="bg-red-700 text-white font-bold py-2 px-4 rounded shadow-lg"
-                            >
-                              Book Now
-                            </button>
-                          </div>
-                          <div className="flex space-x-4 mt-4 text-sm text-gray-400">
-                            {room.features.map((feature, i) => (
-                              <span key={i}>{feature}</span>
-                            ))}
-                          </div>
-                        </>
-                      )}
-                    </CardContent>
-                    {room.comingSoon && (
-                      <div className="absolute inset-0 flex items-center justify-center bg-black/50">
-                        <p className="text-3xl font-bold text-white">COMING SOON</p>
-                      </div>
-                    )}
-                  </Card>
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          {rooms.map((room, index) => {
+            // For the best room, handle image carousel state
+            const isBestRoom = !!room.images;
+            const [bestRoomImageIndex, setBestRoomImageIndex] = useState(0);
+            const handleNextImage = () => {
+              if (!room.images) return;
+              setBestRoomImageIndex((prev) => (prev + 1) % room.images.length);
+            };
+            return (
+              <div
+                key={room.id}
+                className={`relative rounded-3xl shadow-2xl border border-white/20 overflow-hidden flex flex-col transition-transform duration-300 hover:-translate-y-3 hover:shadow-3xl group bg-transparent ${index === 1 ? 'lg:scale-105' : ''}`}
+              >
+                {/* Full-width Room Image Banner or Carousel for best room */}
+                <div className="relative w-full flex-shrink-0 p-4 pb-0">
+                  {isBestRoom ? (
+                    <div className="relative w-full h-72 flex items-center justify-center">
+                      <img
+                        src={room.images[bestRoomImageIndex]}
+                        alt={room.name + ' photo'}
+                        className="w-full h-72 object-cover rounded-2xl shadow-md border-4 border-white/30 transition-all duration-500 ease-in-out hover:scale-105 hover:shadow-xl animate-fade-in"
+                        style={{ display: 'block' }}
+                        loading="lazy"
+                      />
+                      <button
+                        onClick={handleNextImage}
+                        className="absolute right-4 top-1/2 -translate-y-1/2 bg-black/60 hover:bg-black/80 text-white rounded-full p-2 shadow-lg z-20 transition-all duration-300 hover:scale-110 hover:shadow-xl"
+                        style={{ outline: 'none', border: 'none' }}
+                        aria-label="Next image"
+                      >
+                        <svg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='currentColor' className='w-6 h-6'>
+                          <path strokeLinecap='round' strokeLinejoin='round' strokeWidth={2} d='M9 5l7 7-7 7' />
+                        </svg>
+                      </button>
+                    </div>
+                  ) : (
+                    <img
+                      src={room.image}
+                      alt={room.name}
+                      className="w-full h-48 object-cover rounded-2xl shadow-md border border-white/20 transition-all duration-500 ease-in-out hover:scale-105 hover:shadow-xl fade-in-section"
+                      style={{ display: 'block' }}
+                      loading="lazy"
+                    />
+                  )}
+                  {index === 1 && (
+                    <span className="absolute top-6 right-8 bg-gradient-to-r from-red-600 to-orange-500 text-white px-4 py-1 rounded-full text-xs font-bold shadow-lg z-10">Most Popular</span>
+                  )}
                 </div>
-              </CarouselItem>
-            ))}
-          </CarouselContent>
-          <CarouselPrevious className="text-white" />
-          <CarouselNext className="text-white" />
-        </Carousel>
-
-        <div className="mt-16 bg-white/10 backdrop-blur-sm rounded-lg p-8">
-          <h3 className="text-2xl font-bold text-center mb-6">All Rooms Include</h3>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
-            {roomFeatures.map((feature, index) => (
-              <div key={index}>
-                <feature.icon className="h-10 w-10 mx-auto mb-2 text-red-400" />
-                <p className="font-semibold">{feature.title}</p>
-                <p className="text-sm text-gray-400">{feature.desc}</p>
+                {/* Card Content */}
+                <div className="flex flex-col flex-1 pt-6 pb-8 px-8">
+                  <h3 className="text-2xl font-extrabold text-white mb-1 drop-shadow-lg">{room.name}</h3>
+                  <div className="flex items-center gap-2 mb-2">
+                    <span className="text-xl font-bold text-yellow-300">{room.price}</span>
+                    <span className="text-sm text-gray-300">/night</span>
+                  </div>
+                  <p className="text-gray-200 mb-4 flex-grow">{room.description}</p>
+                  <div className="flex justify-between text-sm text-gray-300 mb-4 border-t border-white/20 pt-4">
+                    <span className="flex items-center gap-2"><Bed className="w-4 h-4" />{room.size}</span>
+                    <span className="flex items-center gap-2"><Users className="w-4 h-4" />{room.occupancy}</span>
+                  </div>
+                  <div className="mb-6">
+                    <h4 className="font-semibold mb-2 text-gray-100 text-base">Room Amenities:</h4>
+                    <div className="flex flex-wrap gap-2">
+                      {room.amenities.map((amenity, i) => (
+                        <span key={i} className="flex items-center gap-1 bg-black/40 text-white/90 px-3 py-1 rounded-full text-xs font-medium shadow border border-white/10">
+                          {amenityIcons[amenity] || null}{amenity}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                  <Button
+                    className="w-full mt-auto bg-gradient-to-r from-red-600 to-orange-500 hover:from-orange-600 hover:to-red-700 text-white font-bold text-lg py-3 flex items-center justify-center gap-2 shadow-lg rounded-xl"
+                    onClick={() => {
+                      setSelectedRoom(room.name)
+                      setBookingOpen(true)
+                    }}
+                    aria-label={`Book ${room.name}`}
+                  >
+                    <ClipboardCheck className="w-6 h-6 mr-2" /> Book Now
+                  </Button>
+                </div>
               </div>
-            ))}
+            )
+          })}
+        </div>
+
+        {/* All Rooms Include - frameless, no background */}
+        <div className="mt-20 max-w-4xl mx-auto py-10">
+          <h3 className="text-3xl font-bold text-white text-center mb-10 drop-shadow-lg">All Rooms Include</h3>
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8 text-center">
+            <div>
+              <Wifi className="h-10 w-10 mx-auto mb-3 text-yellow-300" />
+              <p className="font-semibold text-lg text-white">High-Speed Wi-Fi</p>
+              <p className="text-sm text-gray-200">Stay connected with our complimentary Wi-Fi</p>
+            </div>
+            <div>
+              <Mountain className="h-10 w-10 mx-auto mb-3 text-green-300" />
+              <p className="font-semibold text-lg text-white">Scenic Views</p>
+              <p className="text-sm text-gray-200">Breathtaking views of the mountains and valleys</p>
+            </div>
+            <div>
+              <Wind className="h-10 w-10 mx-auto mb-3 text-blue-200" />
+              <p className="font-semibold text-lg text-white">Climate Control</p>
+              <p className="text-sm text-gray-200">Individually controlled heating and cooling</p>
+            </div>
+            <div>
+              <Tv className="h-10 w-10 mx-auto mb-3 text-pink-200" />
+              <p className="font-semibold text-lg text-white">Flat Screen TV</p>
+              <p className="text-sm text-gray-200">Enjoy a wide range of channels</p>
+            </div>
           </div>
         </div>
       </div>
-      {showBookingModal && <BookingModal onClose={closeBooking} />}
-    </section>
+
+      {bookingOpen && (
+        <BookingModal
+          onClose={() => setBookingOpen(false)}
+          selectedRoom={selectedRoom}
+        />
+      )}
+    </div>
   )
 } 

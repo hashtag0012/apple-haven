@@ -2,7 +2,7 @@
 
 import Image from "next/image"
 
-const LEAF_COUNT = 1
+const LEAF_COUNT = 1 
 
 export function ChinarLeaves() {
   return (
@@ -28,8 +28,8 @@ export function ChinarLeaves() {
             <Image
               src="/decorations/clipart-leaves-tulsi-leaf-19.png"
               alt="Falling Leaf"
-              layout="fill"
-              objectFit="contain"
+              fill
+              style={{ objectFit: 'contain' }}
             />
           </div>
         )

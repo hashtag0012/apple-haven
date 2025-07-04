@@ -6,45 +6,31 @@ import {
   UtensilsCrossed,
   ParkingCircle,
   ConciergeBell,
-  Bath,
-  HeartHandshake,
-  Bus,
-  Plane,
-  Car,
-  Ticket,
-  Map,
-  ShoppingBag,
-  Briefcase,
-  Clock,
-  Apple,
+  Sun,
+  Wind,
+  Tv,
   Leaf,
   Sparkles,
 } from "lucide-react"
 import Image from "next/image"
+import { useRef } from "react"
 import { MultiLineTypewriter } from "./ui/multi-line-typewriter"
 
 export function AmenitiesSection() {
-  const sectionTitle = [
-    {
-      text: "Our World-Class Amenities",
-      className: "text-4xl font-bold tracking-tight font-display",
-      style: { color: 'white' }
-    },
-  ]
+  const amenities = [
+    { icon: <Wifi className="w-8 h-8 text-blue-500" />, title: "High-Speed Wi-Fi" },
+    { icon: <UtensilsCrossed className="w-8 h-8 text-orange-500" />, title: "Kashmiri Cuisine" },
+    { icon: <ParkingCircle className="w-8 h-8 text-gray-500" />, title: "24/7 Free Parking" },
+    { icon: <ConciergeBell className="w-8 h-8 text-purple-500" />, title: "Staff Available 24/7" },
+    { icon: <Wind className="w-8 h-8 text-teal-500" />, title: "Central Heating" },
+    { icon: <Tv className="w-8 h-8 text-indigo-500" />, title: "HD TV in Every Room" },
+    { icon: <Sun className="w-8 h-8 text-yellow-500" />, title: "Solar Powered" },
+    { icon: <Leaf className="w-8 h-8 text-green-500" />, title: "Organic Farm" },
+    { icon: <Sparkles className="w-8 h-8 text-blue-400" />, title: "Sanitized Rooms" },
+  ];
 
-  const amenityCategories = [
-    {
-      title: "Hotel Facilities",
-      icon: Briefcase,
-      amenities: [
-        { icon: Wifi, name: "High-Speed Wi-Fi" },
-        { icon: UtensilsCrossed, name: "Kashmiri Cuisine" },
-        { icon: ParkingCircle, name: "24/7 Free Parking" },
-        { icon: ConciergeBell, name: "Staff Available 24/7" },
-        { icon: HeartHandshake, name: "Wedding & Event Spaces" },
-      ],
-    },
-  ]
+  const headingRef = useRef<HTMLHeadingElement>(null);
+  const descRef = useRef<HTMLParagraphElement>(null);
 
   return (
     <section className="py-20 bg-gradient-to-br from-gray-50 to-blue-100 relative overflow-hidden">
@@ -52,70 +38,54 @@ export function AmenitiesSection() {
         <Image
           src="/decorations/Screenshot 2025-06-25 005150.png"
           alt="Amenities Background"
-          layout="fill"
-          objectFit="cover"
-          className="opacity-20"
+          fill
+          style={{ objectFit: 'cover' }}
+          className="z-0 opacity-20 animate-fade-in"
+          priority
         />
         <div className="absolute inset-0 bg-black/30" />
       </div>
+
       <div className="container mx-auto px-4 relative z-10">
-        <div className="text-center mb-12">
-          <MultiLineTypewriter lines={sectionTitle} loop={false} />
-          <p className="mt-4 text-lg text-gray-200 animate-fade-in-up">
-            Enjoy a wide range of amenities to make your stay comfortable and memorable.
+        <div className="text-center mb-16">
+          <h1 ref={headingRef} className="text-4xl md:text-5xl font-bold text-white tracking-tight">
+            <MultiLineTypewriter lines={[{ text: "Amenities & Services", className: "" }]} />
+          </h1>
+          <p ref={descRef} className="mt-4 text-lg text-gray-300 max-w-2xl mx-auto">
+            <MultiLineTypewriter lines={[{ text: "Enjoy a range of amenities designed for your comfort and convenience.", className: "" }]} />
           </p>
         </div>
-        {/* Animated Seasonal Orchard Experience Section */}
-        <div className="mb-16 flex justify-center">
-          <div className="relative bg-white/10 backdrop-blur-lg border-2 border-green-400 rounded-3xl shadow-2xl p-8 max-w-3xl w-full overflow-hidden">
-            {/* Animated Apple and Leaves */}
-            <Apple className="absolute left-6 top-6 text-red-500 animate-bounce" size={40} />
-            <Leaf className="absolute right-8 top-8 text-green-500 animate-spin-slow" size={32} />
-            <Sparkles className="absolute left-1/2 -translate-x-1/2 bottom-6 text-yellow-400 animate-pulse" size={32} />
-            <h3 className="text-4xl font-extrabold font-display text-green-900 mb-4 text-center drop-shadow-lg">Seasonal Orchard Experience</h3>
-            <p className="text-lg text-gray-100 font-medium mb-6 text-center">
-              During apple season, guests are invited to enjoy fresh fruits served daily and can join our staff for a magical hand-picking experience in the nearby orchard. The best time to visit is during the harvest, when the air is filled with the scent of ripe apples—an enchanting experience unique to our hotel.
-            </p>
-            <ul className="list-none flex flex-col gap-3 items-center">
-              <li className="flex items-center gap-2 text-lg font-semibold text-white/90"><Apple className="text-red-400 animate-bounce" size={24} /> Apple Journey: Guided hand-picking in our orchard</li>
-              <li className="flex items-center gap-2 text-lg font-semibold text-white/90"><Leaf className="text-green-400 animate-spin-slow" size={24} /> Fresh fruits served daily during the season</li>
-              <li className="flex items-center gap-2 text-lg font-semibold text-white/90"><Sparkles className="text-yellow-300 animate-pulse" size={24} /> Learn about local apple varieties & traditions</li>
-              <li className="flex items-center gap-2 text-lg font-semibold text-white/90"><Apple className="text-red-400 animate-bounce" size={24} /> Perfect for families & nature lovers</li>
-            </ul>
-          </div>
-        </div>
-        {/* Hotel Facilities grid below */}
-        <div className="grid grid-cols-1 gap-8 mb-16">
-          {amenityCategories.map((category, categoryIndex) => (
-            <Card key={categoryIndex} className="bg-white/10 backdrop-blur-md border-green-300 border-2 text-white hover:bg-white/20 transition-all duration-300 shadow-xl">
-              <CardHeader>
-                <div className="flex items-center space-x-4">
-                  <div className="p-3 rounded-full bg-green-200/30 border border-green-400">
-                    <category.icon className="h-7 w-7 text-green-700" />
-                  </div>
-                  <CardTitle className="text-2xl font-bold text-green-900 font-display">{category.title}</CardTitle>
-                </div>
-              </CardHeader>
-              <CardContent>
-                <ul className="space-y-4">
-                  {category.amenities.map((amenity, amenityIndex) => (
-                    <li key={amenityIndex} className="flex items-center text-lg text-white/90 font-semibold gap-3">
-                      <amenity.icon className="h-6 w-6 text-green-400 animate-fade-in" />
-                      {amenity.name}
-                    </li>
-                  ))}
-                </ul>
-              </CardContent>
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 mb-16">
+          {amenities.map((amenity, index) => (
+            <Card key={index} className="flex flex-col items-center p-6 bg-white/80 border-0 shadow-md">
+              <div className="mb-4">{amenity.icon}</div>
+              <p className="font-semibold text-lg text-gray-800 text-center">{amenity.title}</p>
             </Card>
           ))}
         </div>
-        <div className="mt-16 text-center">
-          <h3 className="text-3xl font-bold text-gray-200">Special Services Upon Request</h3>
-          <p className="mt-4 text-lg text-gray-200">
-            We are happy to arrange personalized experiences, including private dining, cultural tours, and adventure
-            activities. Please contact our staff for more details.
-          </p>
-        </div>
+        <Card className="relative bg-gradient-to-br from-green-50 to-yellow-50 border-4 border-yellow-400 shadow-2xl p-8 max-w-3xl mx-auto mt-8 overflow-hidden">
+          {/* Decorative Apple/Orchard Icon */}
+          <div className="absolute -top-8 left-1/2 -translate-x-1/2 z-10">
+            <Sparkles className="w-16 h-16 text-yellow-300 drop-shadow-lg" />
+          </div>
+          <CardHeader>
+            <CardTitle className="text-3xl font-extrabold text-green-900 mb-2 text-center drop-shadow-lg">
+              <span className="text-red-700">Apple</span> Handpicking & <span className="text-green-700">Orchard</span> Experience
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="text-lg text-gray-800 mb-6 text-center italic">
+              <span className="font-semibold text-green-800">During apple season</span>, guests are invited to enjoy <span className="text-red-700 font-semibold">fresh fruits</span> served daily and can join our staff for a magical <span className="text-green-700 font-semibold">hand-picking experience</span> in the nearby orchard.<br />
+              <span className="text-yellow-700">The best time to visit is during the harvest</span>, when the air is filled with the scent of ripe apples—an enchanting experience unique to our hotel.
+            </p>
+            <ul className="list-disc pl-8 text-gray-800 space-y-2 text-base">
+              <li><span className="font-semibold text-red-700">Guided hand-picking</span> in our orchard</li>
+              <li><span className="font-semibold text-green-700">Fresh fruits</span> served daily during the season</li>
+              <li><span className="font-semibold text-yellow-700">Learn about local apple varieties & traditions</span></li>
+              <li><span className="font-semibold text-green-800">Perfect for families & nature lovers</span></li>
+            </ul>
+          </CardContent>
+        </Card>
       </div>
     </section>
   )

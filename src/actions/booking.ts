@@ -4,7 +4,6 @@ export async function submitBooking(prevState: any, formData: FormData) {
   const bookingData = {
     name: formData.get("name") as string,
     phone: formData.get("phone") as string,
-    address: formData.get("address") as string,
     checkIn: formData.get("checkIn") as string,
     checkOut: formData.get("checkOut") as string,
     roomType: formData.get("roomType") as string,
@@ -19,7 +18,6 @@ export async function submitBooking(prevState: any, formData: FormData) {
     <ul>
       <li><strong>Name:</strong> ${bookingData.name}</li>
       <li><strong>Phone:</strong> ${bookingData.phone}</li>
-      <li><strong>Address:</strong> ${bookingData.address}</li>
       <li><strong>Check-in:</strong> ${bookingData.checkIn}</li>
       <li><strong>Check-out:</strong> ${bookingData.checkOut}</li>
       <li><strong>Room Type:</strong> ${bookingData.roomType}</li>

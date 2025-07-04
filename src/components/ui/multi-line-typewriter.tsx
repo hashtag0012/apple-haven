@@ -17,7 +17,7 @@ interface MultiLineTypewriterProps {
 
 export function MultiLineTypewriter({
   lines,
-  loop = true,
+  loop = false,
   typeDelay = 50,
   lineDelay = 500,
 }: MultiLineTypewriterProps) {

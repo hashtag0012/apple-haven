@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button"
 import { Phone, Menu, X } from "lucide-react"
 import Image from "next/image"
 import { useState, useEffect } from "react"
+import { MultiLineTypewriter } from "@/components/ui/multi-line-typewriter"
 
 interface NavigationProps {
   onSectionChange: (section: string) => void
@@ -57,17 +58,14 @@ export function Navigation({ onSectionChange, onBookingToggle }: NavigationProps
             </button>
             {/* Logo */}
             <div className="flex items-center gap-3 cursor-pointer" onClick={() => onSectionChange("home")}>
-              <Image
-                src="/decorations/1544c8657e0b1996e5a17729f7619958 (1).png"
-                alt="Apple Haven Inn Logo"
-                width={50}
-                height={50}
-                className="rounded-full"
+              <Image 
+                src="/decorations/1544c8657e0b1996e5a17729f7619958 (1).png" 
+                alt="Apple Haven Logo" 
+                width={40} 
+                height={40} 
+                className="rounded-full bg-white shadow"
+                priority
               />
-              <div>
-                <span className="text-xl font-bold text-gray-800 animate-fade-in">Apple Haven Inn</span>
-                <p className="text-xs text-gray-600">Reshur Gulmarg, Kashmir</p>
-              </div>
             </div>
           </div>
           {/* Desktop Navigation */}

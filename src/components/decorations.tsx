@@ -54,7 +54,7 @@ const Decorations = () => {
             animationDelay: `${Math.random() * -15}s`,
           }}
         >
-          <Image src={deco.image} alt="Floating leaf" layout="fill" objectFit="contain" />
+          <Image src={deco.image} alt="Floating leaf" fill style={{ objectFit: 'contain' }} />
         </div>
       ))}
     </div>

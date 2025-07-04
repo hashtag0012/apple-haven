@@ -167,7 +167,6 @@ export function BookingForm() {
                             <SelectItem value="deluxe">Orchard View Deluxe - ₹4,500/night</SelectItem>
                             <SelectItem value="premium">Apple Blossom Suite - ₹7,500/night</SelectItem>
                             <SelectItem value="royal">Heritage Royal Suite - ₹12,000/night</SelectItem>
-                            <SelectItem value="presidential">Apple Haven Presidential - ₹20,000/night</SelectItem>
                           </SelectContent>
                         </Select>
                       </div>
@@ -195,6 +194,7 @@ export function BookingForm() {
                       type="submit"
                       disabled={isPending}
                       className="w-full bg-gradient-to-r from-red-600 to-orange-500 hover:from-red-700 hover:to-orange-600 text-white font-bold py-4 text-lg"
+                      aria-label="Confirm Booking"
                     >
                       {isPending ? "Processing Booking..." : "Confirm Booking"}
                     </Button>
@@ -229,7 +229,7 @@ export function BookingForm() {
                 <CardContent className="space-y-4">
                   <div className="flex items-center gap-2">
                     <MapPin className="w-5 h-5 text-red-600" />
-                    <span className="text-sm">Reshur Gulmarg, Kashmir</span>
+                    <span className="text-sm">Reram Gulmarg, Kashmir</span>
                   </div>
                   <div className="flex items-center gap-2">
                     <Star className="w-5 h-5 text-yellow-500 fill-current" />
