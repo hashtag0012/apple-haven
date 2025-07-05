@@ -97,7 +97,7 @@ export function AmenitiesSection() {
         </div>
 
         {/* Enhanced Orchard Experience Card */}
-        <Card className="orchard-card relative bg-gradient-to-br from-green-400 via-blue-500 to-purple-600 border-0 shadow-2xl p-8 max-w-4xl mx-auto mt-8 overflow-hidden hover:shadow-3xl transition-all duration-500 transform hover:scale-105">
+        <Card className="relative bg-gradient-to-br from-green-600 via-blue-600 to-purple-700 border-0 shadow-2xl p-8 max-w-4xl mx-auto mt-8 overflow-hidden hover:shadow-3xl transition-all duration-500 transform hover:scale-105">
           {/* Animated Background Elements */}
           <div className="absolute top-0 left-0 w-full h-full opacity-10">
             <div className="absolute top-4 left-4 w-8 h-8 bg-white rounded-full animate-float"></div>
@@ -114,35 +114,34 @@ export function AmenitiesSection() {
 
           <CardHeader className="text-center relative z-10">
             <CardTitle className="text-3xl md:text-4xl font-extrabold text-white mb-4 drop-shadow-lg">
-              <span className="text-red-200">Apple</span> Handpicking & <span className="text-green-200">Orchard</span> Experience
+              Apple Handpicking & Orchard Experience
             </CardTitle>
           </CardHeader>
 
           <CardContent className="relative z-10">
-            <p className="text-lg text-white/95 mb-6 text-center italic leading-relaxed">
-              <span className="font-semibold text-green-200">During apple season</span>, guests are invited to enjoy <span className="text-red-200 font-semibold">fresh fruits</span> served daily and can join our staff for a magical <span className="text-green-200 font-semibold">hand-picking experience</span> in the nearby orchard.<br />
-              <span className="text-yellow-200 font-medium">The best time to visit is during the harvest</span>, when the air is filled with the scent of ripe apples—an enchanting experience unique to our hotel.
+            <p className="text-lg text-white/95 mb-6 text-center leading-relaxed">
+              During apple season, guests are invited to enjoy fresh fruits served daily and can join our staff for a magical hand-picking experience in the nearby orchard. The best time to visit is during the harvest, when the air is filled with the scent of ripe apples—an enchanting experience unique to our hotel.
             </p>
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <ul className="space-y-3 text-white/90">
                 <li className="flex items-center gap-3">
-                  <div className="w-2 h-2 bg-red-300 rounded-full animate-pulse"></div>
-                  <span className="font-semibold text-red-200">Guided hand-picking</span> in our orchard
+                  <div className="w-2 h-2 bg-white rounded-full"></div>
+                  <span>Guided hand-picking in our orchard</span>
                 </li>
                 <li className="flex items-center gap-3">
-                  <div className="w-2 h-2 bg-green-300 rounded-full animate-pulse" style={{ animationDelay: '0.5s' }}></div>
-                  <span className="font-semibold text-green-200">Fresh fruits</span> served daily during the season
+                  <div className="w-2 h-2 bg-white rounded-full"></div>
+                  <span>Fresh fruits served daily during the season</span>
                 </li>
               </ul>
               <ul className="space-y-3 text-white/90">
                 <li className="flex items-center gap-3">
-                  <div className="w-2 h-2 bg-yellow-300 rounded-full animate-pulse" style={{ animationDelay: '1s' }}></div>
-                  <span className="font-semibold text-yellow-200">Learn about local apple varieties</span> & traditions
+                  <div className="w-2 h-2 bg-white rounded-full"></div>
+                  <span>Learn about local apple varieties & traditions</span>
                 </li>
                 <li className="flex items-center gap-3">
-                  <div className="w-2 h-2 bg-blue-300 rounded-full animate-pulse" style={{ animationDelay: '1.5s' }}></div>
-                  <span className="font-semibold text-blue-200">Perfect for families</span> & nature lovers
+                  <div className="w-2 h-2 bg-white rounded-full"></div>
+                  <span>Perfect for families & nature lovers</span>
                 </li>
               </ul>
             </div>

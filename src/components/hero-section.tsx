@@ -63,7 +63,7 @@ export function HeroSection({ onBookingToggle }: HeroSectionProps) {
           </div>
           
           <div className="block">
-            <p className="hero-subtitle italic text-lg sm:text-xl md:text-2xl font-medium tracking-wide">
+            <p className="text-lg sm:text-xl md:text-2xl font-medium tracking-wide text-white/90 italic">
               A home away from home in the heart of the valley
             </p>
           </div>
