@@ -26,12 +26,12 @@ export function ContactSection() {
       <div className="container mx-auto px-4 relative z-10">
         {/* Header */}
         <div className="text-center mb-16">
-          <h1 ref={headingRef} className="text-5xl font-bold text-black mb-4 font-display">
+          <div ref={headingRef} className="text-5xl font-bold text-black mb-4 font-display">
             <MultiLineTypewriter lines={[{ text: "Contact Us", className: "" }]} />
-          </h1>
-          <p ref={descRef} className="text-xl text-gray-600 max-w-3xl mx-auto">
+          </div>
+          <div ref={descRef} className="text-xl text-gray-600 max-w-3xl mx-auto">
             <MultiLineTypewriter lines={[{ text: "For bookings, questions, or special requests, please reach out to us. We look forward to welcoming you!", className: "" }]} />
-          </p>
+          </div>
         </div>
 
         {/* Centered Hotel Information */}
@@ -122,4 +122,4 @@ export function ContactSection() {
       </div>
     </div>
   )
-} 
+}

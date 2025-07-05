@@ -107,12 +107,12 @@ export function RoomsSection() {
 
       <div className="container mx-auto px-4 relative z-10">
         <div className="text-center mb-16">
-          <h1 ref={headingRef} className="text-4xl md:text-5xl font-bold text-white tracking-tight">
+          <div ref={headingRef} className="text-4xl md:text-5xl font-bold text-white tracking-tight">
             <MultiLineTypewriter lines={[{ text: "Our Rooms & Suites", className: "" }]} />
-          </h1>
-          <p ref={descRef} className="mt-4 text-lg text-gray-300 max-w-2xl mx-auto">
+          </div>
+          <div ref={descRef} className="mt-4 text-lg text-gray-300 max-w-2xl mx-auto">
             <MultiLineTypewriter lines={[{ text: "Experience Kashmiri hospitality in our beautifully designed accommodations, where comfort meets tradition.", className: "" }]} />
-          </p>
+          </div>
         </div>
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {rooms.map((room, index) => {
@@ -237,4 +237,4 @@ export function RoomsSection() {
       )}
     </div>
   )
-} 
+}

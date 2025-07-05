@@ -28,8 +28,8 @@ export function HeroSection({ onBookingToggle }: HeroSectionProps) {
 
       {/* Main Heading */}
       <div className="text-center z-10 relative">
-        <h1 ref={headingRef} className="mb-4 animate-fade-in">
-          <span className="block relative">
+        <div ref={headingRef} className="mb-4 animate-fade-in">
+          <div className="block relative">
             <MultiLineTypewriter
               lines={[
                 { text: "Welcome to", className: "text-6xl md:text-8xl font-extrabold text-white/90 tracking-wide mb-2 glow-text" }
@@ -37,13 +37,13 @@ export function HeroSection({ onBookingToggle }: HeroSectionProps) {
               typeDelay={60}
               lineDelay={900}
             />
-          </span>
-          <span className="flex items-center justify-center gap-4 my-4" aria-hidden="true">
+          </div>
+          <div className="flex items-center justify-center gap-4 my-4" aria-hidden="true">
             <span className="block h-1 w-20 bg-white/40" />
             <span className="text-yellow-300 text-3xl md:text-5xl animate-bounce">✦</span>
             <span className="block h-1 w-20 bg-white/40" />
-          </span>
-          <span className="block">
+          </div>
+          <div className="block">
             <MultiLineTypewriter
               lines={[
                 { text: "APPLE HAVEN", className: "text-4xl md:text-6xl font-bold uppercase bg-gradient-to-r from-red-600 via-orange-400 to-yellow-300 text-transparent bg-clip-text drop-shadow-lg mt-2 glow-text" }
@@ -51,8 +51,8 @@ export function HeroSection({ onBookingToggle }: HeroSectionProps) {
               typeDelay={60}
               lineDelay={900}
             />
-          </span>
-          <span className="block mt-6">
+          </div>
+          <div className="block mt-6">
             <MultiLineTypewriter
               lines={[
                 { text: "A home away from home in the heart of the valley.", className: "italic text-base md:text-xl text-white/80 glow-text" }
@@ -60,8 +60,8 @@ export function HeroSection({ onBookingToggle }: HeroSectionProps) {
               typeDelay={30}
               lineDelay={900}
             />
-          </span>
-        </h1>
+          </div>
+        </div>
       </div>
 
       {/* Action Buttons */}

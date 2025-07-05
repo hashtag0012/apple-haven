@@ -48,12 +48,12 @@ export function AmenitiesSection() {
 
       <div className="container mx-auto px-4 relative z-10">
         <div className="text-center mb-16">
-          <h1 ref={headingRef} className="text-4xl md:text-5xl font-bold text-white tracking-tight">
+          <div ref={headingRef} className="text-4xl md:text-5xl font-bold text-white tracking-tight">
             <MultiLineTypewriter lines={[{ text: "Amenities & Services", className: "" }]} />
-          </h1>
-          <p ref={descRef} className="mt-4 text-lg text-gray-300 max-w-2xl mx-auto">
+          </div>
+          <div ref={descRef} className="mt-4 text-lg text-gray-300 max-w-2xl mx-auto">
             <MultiLineTypewriter lines={[{ text: "Enjoy a range of amenities designed for your comfort and convenience.", className: "" }]} />
-          </p>
+          </div>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 mb-16">
           {amenities.map((amenity, index) => (
@@ -89,4 +89,4 @@ export function AmenitiesSection() {
       </div>
     </section>
   )
-} 
+}
