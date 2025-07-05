@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { MapPin, Star, Award, Heart } from "lucide-react"
+import { MapPin, Award, Heart } from "lucide-react"
 import Image from "next/image"
 import { useEffect, useState } from "react"
 
@@ -22,9 +22,6 @@ export function HeroSection({ onBookingToggle }: HeroSectionProps) {
       {/* Floating Elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-20 left-10 animate-float">
-          <Star className="w-6 h-6 text-yellow-300 opacity-70" />
-        </div>
-        <div className="absolute top-32 right-16 animate-float" style={{ animationDelay: '1s' }}>
           <Heart className="w-5 h-5 text-red-300 opacity-60" />
         </div>
         <div className="absolute bottom-40 left-20 animate-float" style={{ animationDelay: '2s' }}>
@@ -70,12 +67,8 @@ export function HeroSection({ onBookingToggle }: HeroSectionProps) {
         </div>
       </div>
 
-      {/* Enhanced Features */}
+      {/* Enhanced Features - Removed 4.9 Rating */}
       <div className={`flex flex-wrap justify-center gap-4 mb-8 transition-all duration-1000 delay-600 ${isVisible ? 'animate-fade-in-up opacity-100' : 'opacity-0'}`}>
-        <div className="flex items-center gap-2 bg-white/10 backdrop-blur-sm rounded-full px-4 py-2 border border-white/20">
-          <Star className="w-4 h-4 text-yellow-300 fill-current" />
-          <span className="text-white text-sm font-medium">4.9 Rating</span>
-        </div>
         <div className="flex items-center gap-2 bg-white/10 backdrop-blur-sm rounded-full px-4 py-2 border border-white/20">
           <Award className="w-4 h-4 text-orange-300" />
           <span className="text-white text-sm font-medium">Premium Experience</span>

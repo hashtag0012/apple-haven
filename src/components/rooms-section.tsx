@@ -7,7 +7,6 @@ import { Wifi, Mountain, Users, Bed, Tv, Wind, Coffee, ClipboardCheck } from "lu
 import Image from "next/image"
 import { useState, useRef } from "react"
 import { BookingModal } from "./booking-modal"
-import { MultiLineTypewriter } from "./ui/multi-line-typewriter"
 
 export function RoomsSection() {
   const [bookingOpen, setBookingOpen] = useState(false)
@@ -92,28 +91,39 @@ export function RoomsSection() {
   const descRef = useRef<HTMLParagraphElement>(null);
 
   return (
-    <div className="relative py-32 bg-black text-white overflow-hidden">
-      {/* Background Texture - covers the bottom of the section */}
-      <div className="absolute inset-0 z-0 min-h-full">
+    <div className="relative py-32 text-white overflow-hidden">
+      {/* Enhanced Background with Kashmir Mountains */}
+      <div className="absolute inset-0 z-0">
         <Image
           src="/images/1_UjtUj9B7PqGvTWNuRll0Vw.jpg"
-          alt="background design"
+          alt="Kashmir Mountains Background"
           fill
           style={{ objectFit: "cover", objectPosition: "center top" }}
+          className="z-0"
         />
-        {/* Existing gradient overlay for bottom fade */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black via-black/80 to-transparent"></div>
+        {/* Enhanced gradient overlay */}
+        <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/60 to-black/80"></div>
+        
+        {/* Additional atmospheric effects */}
+        <div className="absolute inset-0 bg-gradient-to-r from-blue-900/20 via-transparent to-purple-900/20"></div>
+        
+        {/* Subtle pattern overlay */}
+        <div className="absolute inset-0 opacity-5" style={{
+          backgroundImage: `radial-gradient(circle at 2px 2px, white 1px, transparent 0)`,
+          backgroundSize: '40px 40px'
+        }}></div>
       </div>
 
       <div className="container mx-auto px-4 relative z-10">
         <div className="text-center mb-16">
-          <div ref={headingRef} className="text-4xl md:text-5xl font-bold text-white tracking-tight">
-            <MultiLineTypewriter lines={[{ text: "Our Rooms & Suites", className: "" }]} />
-          </div>
-          <div ref={descRef} className="mt-4 text-lg text-gray-300 max-w-2xl mx-auto">
-            <MultiLineTypewriter lines={[{ text: "Experience Kashmiri hospitality in our beautifully designed accommodations, where comfort meets tradition.", className: "" }]} />
-          </div>
+          <h2 className="text-4xl md:text-5xl font-bold text-white tracking-tight mb-4 animate-fade-in-up">
+            Our Rooms & Suites
+          </h2>
+          <p className="text-lg text-gray-300 max-w-2xl mx-auto animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
+            Experience Kashmiri hospitality in our beautifully designed accommodations, where comfort meets tradition.
+          </p>
         </div>
+        
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {rooms.map((room, index) => {
             // For the best room, handle image carousel state
@@ -126,7 +136,7 @@ export function RoomsSection() {
             return (
               <div
                 key={room.id}
-                className={`relative rounded-3xl shadow-2xl border border-white/20 overflow-hidden flex flex-col transition-transform duration-300 hover:-translate-y-3 hover:shadow-3xl group bg-transparent ${index === 1 ? 'lg:scale-105' : ''}`}
+                className={`relative rounded-3xl shadow-2xl border border-white/20 overflow-hidden flex flex-col transition-transform duration-300 hover:-translate-y-3 hover:shadow-3xl group bg-black/40 backdrop-blur-sm ${index === 1 ? 'lg:scale-105' : ''}`}
               >
                 {/* Full-width Room Image Banner or Carousel for best room */}
                 <div className="relative w-full flex-shrink-0 p-4 pb-0">
@@ -201,26 +211,26 @@ export function RoomsSection() {
           })}
         </div>
 
-        {/* All Rooms Include - frameless, no background */}
+        {/* All Rooms Include - Enhanced */}
         <div className="mt-20 max-w-4xl mx-auto py-10">
           <h3 className="text-3xl font-bold text-white text-center mb-10 drop-shadow-lg">All Rooms Include</h3>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8 text-center">
-            <div>
+            <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20 hover:bg-white/20 transition-all duration-300">
               <Wifi className="h-10 w-10 mx-auto mb-3 text-yellow-300" />
               <p className="font-semibold text-lg text-white">High-Speed Wi-Fi</p>
               <p className="text-sm text-gray-200">Stay connected with our complimentary Wi-Fi</p>
             </div>
-            <div>
+            <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20 hover:bg-white/20 transition-all duration-300">
               <Mountain className="h-10 w-10 mx-auto mb-3 text-green-300" />
               <p className="font-semibold text-lg text-white">Scenic Views</p>
               <p className="text-sm text-gray-200">Breathtaking views of the mountains and valleys</p>
             </div>
-            <div>
+            <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20 hover:bg-white/20 transition-all duration-300">
               <Wind className="h-10 w-10 mx-auto mb-3 text-blue-200" />
               <p className="font-semibold text-lg text-white">Climate Control</p>
               <p className="text-sm text-gray-200">Individually controlled heating and cooling</p>
             </div>
-            <div>
+            <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20 hover:bg-white/20 transition-all duration-300">
               <Tv className="h-10 w-10 mx-auto mb-3 text-pink-200" />
               <p className="font-semibold text-lg text-white">Flat Screen TV</p>
               <p className="text-sm text-gray-200">Enjoy a wide range of channels</p>

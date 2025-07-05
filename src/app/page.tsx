@@ -96,7 +96,7 @@ export default function AppleHavenInn() {
             }} />
           </div>
           
-          {/* Enhanced 3D Model */}
+          {/* Enhanced 3D Model - Synced with loading screen */}
           <div className="absolute inset-0 z-5">
             <Suspense fallback={
               <div className="w-full h-full flex items-center justify-center">
@@ -107,6 +107,7 @@ export default function AppleHavenInn() {
                 modelUrls={["/models/countryside/kashmiri_apple_very_r_0629101439_texture.glb"]}
                 onLoaded={handleModelLoaded}
                 className="border-0"
+                loadingDuration={3000} // Sync with loading screen
               />
             </Suspense>
           </div>
@@ -139,18 +140,19 @@ export default function AppleHavenInn() {
       {/* Booking Modal */}
       {showBookingModal && <BookingModal onClose={toggleBooking} />}
 
-      {/* Enhanced Footer */}
-      <footer className="w-full relative bg-gradient-to-br from-white via-orange-50 to-red-50 text-gray-800 pt-12 pb-6 mt-16 border-t border-orange-200 shadow-2xl overflow-hidden">
+      {/* Enhanced Footer - Complete Gap Filled */}
+      <footer className="w-full relative bg-gradient-to-br from-white via-orange-50 to-red-50 text-gray-800 pt-16 pb-8 mt-16 border-t border-orange-200 shadow-2xl overflow-hidden">
         {/* Background Pattern */}
         <div className="absolute inset-0 opacity-5">
           <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-red-500 via-orange-500 to-yellow-500"></div>
         </div>
         
         <div className="container mx-auto px-4 relative z-10">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-8 mb-8">
+          {/* Main Footer Content */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
             {/* Hotel Info */}
-            <div className="flex flex-col items-center md:items-start gap-3 flex-1">
-              <div className="flex items-center gap-4">
+            <div className="lg:col-span-2">
+              <div className="flex items-center gap-4 mb-6">
                 <div className="relative">
                   <img 
                     src="/decorations/1544c8657e0b1996e5a17729f7619958 (1).png" 
@@ -160,21 +162,52 @@ export default function AppleHavenInn() {
                   <div className="absolute inset-0 rounded-full bg-gradient-to-r from-red-500/20 to-orange-500/20 animate-pulse"></div>
                 </div>
                 <div>
-                  <h3 className="text-2xl font-bold text-red-700">Apple Haven Inn</h3>
-                  <p className="text-sm text-gray-600">Your Home in Paradise</p>
+                  <h3 className="text-3xl font-bold text-red-700">Apple Haven Inn</h3>
+                  <p className="text-lg text-gray-600">Your Home in Paradise</p>
                 </div>
               </div>
-              <div className="text-center md:text-left">
-                <p className="text-sm text-gray-600">Reram Gulmarg, Kashmir Valley 193403</p>
-                <p className="text-sm text-gray-600">📞 +91 194 xxx xxxx</p>
-                <p className="text-sm text-gray-600">✉️ applehavenkashmir@gmail.com</p>
+              <div className="space-y-2 text-gray-600">
+                <p className="flex items-center gap-2">
+                  <span className="w-2 h-2 bg-red-500 rounded-full"></span>
+                  Reram Gulmarg, Kashmir Valley 193403
+                </p>
+                <p className="flex items-center gap-2">
+                  <span className="w-2 h-2 bg-orange-500 rounded-full"></span>
+                  📞 +91 194 xxx xxxx
+                </p>
+                <p className="flex items-center gap-2">
+                  <span className="w-2 h-2 bg-yellow-500 rounded-full"></span>
+                  ✉️ applehavenkashmir@gmail.com
+                </p>
               </div>
             </div>
             
-            {/* Social Media */}
-            <div className="flex flex-col items-center gap-4 flex-1">
-              <h4 className="text-lg font-semibold text-red-700">Follow Our Journey</h4>
-              <div className="flex gap-4">
+            {/* Quick Links */}
+            <div>
+              <h4 className="text-xl font-bold text-red-700 mb-6">Quick Links</h4>
+              <div className="space-y-3">
+                {['home', 'rooms', 'amenities', 'gallery', 'contact'].map((section) => (
+                  <button 
+                    key={section}
+                    onClick={() => scrollToSection(section)}
+                    className="block text-gray-600 hover:text-red-600 transition-colors duration-300 capitalize"
+                  >
+                    {section === 'home' ? 'Home' : section}
+                  </button>
+                ))}
+                <button 
+                  onClick={toggleBooking}
+                  className="block font-semibold text-red-600 hover:text-red-700 transition-colors duration-300"
+                >
+                  Book Now
+                </button>
+              </div>
+            </div>
+            
+            {/* Social Media & Contact */}
+            <div>
+              <h4 className="text-xl font-bold text-red-700 mb-6">Follow Us</h4>
+              <div className="flex gap-4 mb-6">
                 <a 
                   href="https://www.instagram.com/apple.haven.kashmir/" 
                   target="_blank" 
@@ -202,45 +235,30 @@ export default function AppleHavenInn() {
                   </span>
                 </a>
               </div>
-            </div>
-            
-            {/* Quick Links */}
-            <div className="flex flex-col items-center md:items-end gap-3 flex-1">
-              <h4 className="text-lg font-semibold text-red-700">Quick Links</h4>
-              <div className="flex flex-col gap-2 text-center md:text-right">
-                <button 
-                  onClick={() => scrollToSection('rooms')}
-                  className="text-sm text-gray-600 hover:text-red-600 transition-colors duration-300"
-                >
-                  Our Rooms
-                </button>
-                <button 
-                  onClick={() => scrollToSection('amenities')}
-                  className="text-sm text-gray-600 hover:text-red-600 transition-colors duration-300"
-                >
-                  Amenities
-                </button>
-                <button 
-                  onClick={() => scrollToSection('gallery')}
-                  className="text-sm text-gray-600 hover:text-red-600 transition-colors duration-300"
-                >
-                  Gallery
-                </button>
-                <button 
-                  onClick={toggleBooking}
-                  className="text-sm font-semibold text-red-600 hover:text-red-700 transition-colors duration-300"
-                >
-                  Book Now
-                </button>
+              
+              {/* Additional Info */}
+              <div className="space-y-2 text-sm text-gray-600">
+                <p><strong>Check-in:</strong> 2:00 PM</p>
+                <p><strong>Check-out:</strong> 12:00 PM</p>
+                <p><strong>Reception:</strong> 24/7</p>
               </div>
             </div>
           </div>
           
           {/* Bottom Bar */}
-          <div className="border-t border-gray-300 pt-6 flex flex-col md:flex-row items-center justify-between gap-4">
-            <p className="text-sm text-gray-500">
-              &copy; {new Date().getFullYear()} Apple Haven Inn. All rights reserved.
-            </p>
+          <div className="border-t border-gray-300 pt-8 flex flex-col md:flex-row items-center justify-between gap-4">
+            <div className="flex flex-col md:flex-row items-center gap-4">
+              <p className="text-sm text-gray-500">
+                &copy; {new Date().getFullYear()} Apple Haven Inn. All rights reserved.
+              </p>
+              <div className="flex items-center gap-4 text-xs text-gray-400">
+                <span>Privacy Policy</span>
+                <span>•</span>
+                <span>Terms of Service</span>
+                <span>•</span>
+                <span>Cancellation Policy</span>
+              </div>
+            </div>
             <p className="text-sm text-gray-400 flex items-center gap-2">
               <span>Designed with</span>
               <span className="text-red-500 animate-pulse">❤️</span>
