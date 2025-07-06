@@ -9,24 +9,24 @@ export function LoadingScreen({ onFinish }: { onFinish?: () => void }) {
   const timeoutRef = useRef<NodeJS.Timeout | null>(null)
 
   useEffect(() => {
-    // Smooth progress animation
+    // Faster progress animation
     const progressInterval = setInterval(() => {
       setProgress(prev => {
         if (prev >= 100) {
           clearInterval(progressInterval)
           return 100
         }
-        return prev + Math.random() * 15 + 5
+        return prev + Math.random() * 20 + 8
       })
-    }, 150)
+    }, 100)
 
-    // Slide out after progress completes
+    // Faster slide out
     timeoutRef.current = setTimeout(() => {
       setSlideOut(true)
       setTimeout(() => {
         onFinish?.()
-      }, 700)
-    }, 3000)
+      }, 500)
+    }, 2000) // Reduced from 3000 to 2000
 
     return () => {
       if (timeoutRef.current) clearTimeout(timeoutRef.current)
@@ -71,7 +71,7 @@ export function LoadingScreen({ onFinish }: { onFinish?: () => void }) {
         <div className="w-64 mx-auto mb-6">
           <div className="bg-white/20 rounded-full h-2 overflow-hidden">
             <div 
-              className="bg-white h-full rounded-full transition-all duration-300 ease-out"
+              className="bg-white h-full rounded-full transition-all duration-200 ease-out"
               style={{ width: `${Math.min(progress, 100)}%` }}
             ></div>
           </div>

@@ -30,14 +30,14 @@ type ModelViewerProps = {
   modelUrls: string[];
   className?: string;
   onLoaded?: () => void;
-  loadingDuration?: number; // New prop to sync with loading screen
+  loadingDuration?: number;
 };
 
 const ModelViewer: React.FC<ModelViewerProps> = ({ 
   modelUrls, 
   className, 
   onLoaded, 
-  loadingDuration = 3000 
+  loadingDuration = 1500 // Reduced loading duration for faster loading
 }) => {
   const mountRef = useRef<HTMLDivElement>(null);
   const controlsRef = useRef<OrbitControls | null>(null);
@@ -79,60 +79,60 @@ const ModelViewer: React.FC<ModelViewerProps> = ({
       const scene = new THREE.Scene();
       
       // Enhanced Lighting System for better apple appearance
-      const ambientLight = new THREE.AmbientLight(0xffffff, 0.8);
+      const ambientLight = new THREE.AmbientLight(0xffffff, 0.9);
       scene.add(ambientLight);
       
       // Main directional light with enhanced settings
-      const directionalLight = new THREE.DirectionalLight(0xfffaf0, 1.5);
-      directionalLight.position.set(20, 25, 20);
+      const directionalLight = new THREE.DirectionalLight(0xfffaf0, 1.8);
+      directionalLight.position.set(25, 30, 25);
       directionalLight.castShadow = true;
-      directionalLight.shadow.mapSize.width = 4096;
-      directionalLight.shadow.mapSize.height = 4096;
+      directionalLight.shadow.mapSize.width = 2048;
+      directionalLight.shadow.mapSize.height = 2048;
       directionalLight.shadow.camera.near = 0.5;
       directionalLight.shadow.camera.far = 150;
       directionalLight.shadow.bias = -0.0001;
       scene.add(directionalLight);
 
       // Enhanced fill lights for better apple illumination
-      const fillLight1 = new THREE.DirectionalLight(0xff6b6b, 0.9);
-      fillLight1.position.set(-15, 12, -15);
+      const fillLight1 = new THREE.DirectionalLight(0xff6b6b, 1.1);
+      fillLight1.position.set(-18, 15, -18);
       scene.add(fillLight1);
 
-      const fillLight2 = new THREE.DirectionalLight(0xffd700, 1.0);
-      fillLight2.position.set(0, 10, -25);
+      const fillLight2 = new THREE.DirectionalLight(0xffd700, 1.2);
+      fillLight2.position.set(0, 12, -30);
       scene.add(fillLight2);
 
       // Enhanced point lights for apple glow
-      const pointLight1 = new THREE.PointLight(0xff4757, 1.2, 40);
-      pointLight1.position.set(10, 8, 10);
+      const pointLight1 = new THREE.PointLight(0xff4757, 1.4, 45);
+      pointLight1.position.set(12, 10, 12);
       scene.add(pointLight1);
 
-      const pointLight2 = new THREE.PointLight(0xffa500, 1.0, 35);
-      pointLight2.position.set(-10, 8, 10);
+      const pointLight2 = new THREE.PointLight(0xffa500, 1.2, 40);
+      pointLight2.position.set(-12, 10, 12);
       scene.add(pointLight2);
 
       // Rim light for better definition
-      const rimLight = new THREE.DirectionalLight(0xffffff, 0.7);
-      rimLight.position.set(0, 15, -30);
+      const rimLight = new THREE.DirectionalLight(0xffffff, 0.8);
+      rimLight.position.set(0, 18, -35);
       scene.add(rimLight);
 
       // Enhanced Camera
       const camera = new THREE.PerspectiveCamera(50, currentMount.clientWidth / currentMount.clientHeight, 0.1, 1000);
-      camera.position.set(0, 18, 30);
+      camera.position.set(0, 20, 35);
 
       // Enhanced Renderer with better quality
       const lowEnd = isLowEndDevice();
       renderer = new THREE.WebGLRenderer({ 
-        antialias: true, 
+        antialias: !lowEnd, 
         powerPreference: lowEnd ? "low-power" : "high-performance",
         alpha: true
       });
       renderer.setSize(currentMount.clientWidth, currentMount.clientHeight);
       renderer.setPixelRatio(Math.min(window.devicePixelRatio, lowEnd ? 1.5 : 2.5));
-      renderer.shadowMap.enabled = true;
+      renderer.shadowMap.enabled = !lowEnd;
       renderer.shadowMap.type = THREE.PCFSoftShadowMap;
       renderer.toneMapping = THREE.ACESFilmicToneMapping;
-      renderer.toneMappingExposure = 1.4;
+      renderer.toneMappingExposure = 1.5;
       renderer.outputColorSpace = THREE.SRGBColorSpace;
       renderer.physicallyCorrectLights = true;
       currentMount.appendChild(renderer.domElement);
@@ -141,17 +141,17 @@ const ModelViewer: React.FC<ModelViewerProps> = ({
       const controls = new OrbitControls(camera, renderer.domElement);
       controlsRef.current = controls;
       controls.enableDamping = true;
-      controls.dampingFactor = 0.02;
+      controls.dampingFactor = 0.015;
       controls.autoRotate = animationsEnabled;
-      controls.autoRotateSpeed = 1.2;
+      controls.autoRotateSpeed = 1.5;
       controls.enableZoom = true;
       controls.enablePan = false;
-      controls.minDistance = 20;
-      controls.maxDistance = 60;
+      controls.minDistance = 22;
+      controls.maxDistance = 65;
       controls.minPolarAngle = Math.PI / 8;
       controls.maxPolarAngle = Math.PI / 1.8;
 
-      // Enhanced Model Loader with progress tracking
+      // Enhanced Model Loader with faster loading
       const loader = new GLTFLoader();
       const dracoLoader = new DRACOLoader();
       dracoLoader.setDecoderPath('https://www.gstatic.com/draco/v1/decoders/');
@@ -165,7 +165,7 @@ const ModelViewer: React.FC<ModelViewerProps> = ({
         return;
       }
 
-      // Sync model loading with loading screen duration
+      // Faster model loading
       const startTime = Date.now();
 
       modelUrls.forEach((url, i) => {
@@ -177,34 +177,34 @@ const ModelViewer: React.FC<ModelViewerProps> = ({
               // Enhanced model processing for better apple appearance
               model.traverse(function (node) {
                 if (node instanceof THREE.Mesh) {
-                  node.castShadow = true;
-                  node.receiveShadow = true;
+                  node.castShadow = !lowEnd;
+                  node.receiveShadow = !lowEnd;
                   
                   // Enhanced material properties for realistic apple look
                   if (node.material) {
                     if (Array.isArray(node.material)) {
                       node.material.forEach(mat => {
                         if (mat instanceof THREE.MeshStandardMaterial) {
-                          mat.roughness = 0.2;
-                          mat.metalness = 0.05;
-                          mat.envMapIntensity = 2.0;
-                          mat.clearcoat = 0.3;
-                          mat.clearcoatRoughness = 0.1;
+                          mat.roughness = 0.15;
+                          mat.metalness = 0.03;
+                          mat.envMapIntensity = 2.2;
+                          mat.clearcoat = 0.4;
+                          mat.clearcoatRoughness = 0.08;
                         }
                       });
                     } else if (node.material instanceof THREE.MeshStandardMaterial) {
-                      node.material.roughness = 0.2;
-                      node.material.metalness = 0.05;
-                      node.material.envMapIntensity = 2.0;
-                      node.material.clearcoat = 0.3;
-                      node.material.clearcoatRoughness = 0.1;
+                      node.material.roughness = 0.15;
+                      node.material.metalness = 0.03;
+                      node.material.envMapIntensity = 2.2;
+                      node.material.clearcoat = 0.4;
+                      node.material.clearcoatRoughness = 0.08;
                     }
                   }
                 }
               });
 
               // Enhanced positioning and scaling for better presentation
-              model.scale.set(5, 5, 5);
+              model.scale.set(5.5, 5.5, 5.5);
               model.position.set(0, -3, 0);
 
               allModels.add(model);
@@ -222,12 +222,12 @@ const ModelViewer: React.FC<ModelViewerProps> = ({
                   const maxDim = Math.max(size.x, size.y, size.z);
                   const fov = camera.fov * (Math.PI / 180);
                   let cameraZ = Math.abs(maxDim / 2 / Math.tan(fov / 2));
-                  cameraZ *= 2.0;
+                  cameraZ *= 2.2;
                   camera.position.set(cameraZ * 0.9, cameraZ * 0.7, cameraZ);
                   controls.target.set(0, 0, 0);
                   controls.update();
 
-                  // Ensure model loads within loading screen duration
+                  // Faster loading completion
                   const elapsedTime = Date.now() - startTime;
                   const remainingTime = Math.max(0, loadingDuration - elapsedTime);
                   
@@ -250,7 +250,7 @@ const ModelViewer: React.FC<ModelViewerProps> = ({
           );
       });
 
-      // Enhanced animation loop with more natural movement
+      // Enhanced animation loop with more bouncy movement
       const animate = () => {
         animationFrameId = requestAnimationFrame(animate);
 
@@ -258,17 +258,19 @@ const ModelViewer: React.FC<ModelViewerProps> = ({
           controls.autoRotate = animationsEnabled;
         }
         
-        // Enhanced bouncing animation with more realistic physics
+        // Enhanced bouncing animation with more bounce
         if (allModels.children.length > 0 && animationsEnabled) {
           const apple = allModels.children[0];
           const time = Date.now() * 0.001;
-          const bounceHeight = Math.sin(time * 0.8) * 0.4;
-          const rotationY = Math.sin(time * 0.3) * 0.05;
-          const rotationX = Math.sin(time * 0.4) * 0.02;
+          const bounceHeight = Math.sin(time * 1.2) * 0.8; // Increased bounce
+          const rotationY = Math.sin(time * 0.4) * 0.08; // More rotation
+          const rotationX = Math.sin(time * 0.5) * 0.04; // More tilt
+          const scale = 1 + Math.sin(time * 1.5) * 0.02; // Slight scale bounce
           
           apple.position.y = bounceHeight;
-          apple.rotation.y += rotationY * 0.01;
-          apple.rotation.x += rotationX * 0.01;
+          apple.rotation.y += rotationY * 0.015;
+          apple.rotation.x += rotationX * 0.015;
+          apple.scale.setScalar(5.5 * scale); // Apply scale bounce
         }
         
         controls.update();

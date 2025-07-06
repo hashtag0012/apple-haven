@@ -108,25 +108,37 @@ export function Navigation({ onSectionChange, onBookingToggle }: NavigationProps
 
           {/* Contact & Mobile Menu */}
           <div className="flex items-center gap-4">
-            <div className="hidden md:flex items-center gap-2 text-gray-600 animate-fade-in">
+            <div className="hidden md:flex items-center gap-2 text-gray-600">
               <Phone className="w-4 h-4" />
               <span className="font-medium">+91 194 xxx xxxx</span>
             </div>
             
-            {/* Mobile Menu Button */}
+            {/* Enhanced Mobile Menu Button */}
             <button
-              className="lg:hidden p-2 rounded-lg hover:bg-gray-100 transform hover:scale-110 transition-all duration-200"
+              className="lg:hidden p-2 rounded-lg hover:bg-gray-100 transform hover:scale-110 transition-all duration-200 relative"
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
             >
-              {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+              <div className="relative w-6 h-6">
+                <span className={`absolute top-1 left-0 w-6 h-0.5 bg-gray-600 transition-all duration-300 ${
+                  isMobileMenuOpen ? 'rotate-45 translate-y-2' : ''
+                }`}></span>
+                <span className={`absolute top-3 left-0 w-6 h-0.5 bg-gray-600 transition-all duration-300 ${
+                  isMobileMenuOpen ? 'opacity-0' : ''
+                }`}></span>
+                <span className={`absolute top-5 left-0 w-6 h-0.5 bg-gray-600 transition-all duration-300 ${
+                  isMobileMenuOpen ? '-rotate-45 -translate-y-2' : ''
+                }`}></span>
+              </div>
             </button>
           </div>
         </div>
 
         {/* Mobile Menu */}
-        {isMobileMenuOpen && (
-          <div className="lg:hidden mt-4 pb-4 border-t border-gray-200 animate-slide-down">
-            <div className="flex flex-col gap-4 pt-4">
+        <div className={`lg:hidden overflow-hidden transition-all duration-300 ${
+          isMobileMenuOpen ? 'max-h-96 mt-4 pb-4' : 'max-h-0'
+        }`}>
+          <div className="border-t border-gray-200 pt-4">
+            <div className="flex flex-col gap-4">
               {navItems.map((item, index) => (
                 <button
                   key={item.id}
@@ -134,19 +146,23 @@ export function Navigation({ onSectionChange, onBookingToggle }: NavigationProps
                     onSectionChange(item.id)
                     setIsMobileMenuOpen(false)
                   }}
-                  className={`text-left font-medium transition-all duration-300 hover:translate-x-2 py-2 px-4 rounded-lg ${
+                  className={`text-left font-medium transition-all duration-300 hover:translate-x-2 py-2 px-4 rounded-lg transform ${
                     activeSection === item.id 
-                      ? "text-red-600 bg-red-50 font-semibold" 
+                      ? "text-red-600 bg-red-50 font-semibold translate-x-2" 
                       : "text-gray-700 hover:text-red-600 hover:bg-gray-50"
                   }`}
-                  style={{ animationDelay: `${index * 0.1}s` }}
+                  style={{ 
+                    transitionDelay: `${index * 0.05}s`,
+                    opacity: isMobileMenuOpen ? 1 : 0,
+                    transform: `translateY(${isMobileMenuOpen ? 0 : -10}px)`
+                  }}
                 >
                   {item.label}
                 </button>
               ))}
             </div>
           </div>
-        )}
+        </div>
       </div>
     </nav>
   )

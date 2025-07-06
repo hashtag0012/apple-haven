@@ -1,7 +1,7 @@
 "use client"
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { MapPin, Phone, Mail, Clock, Car, Plane, Star, Heart } from "lucide-react"
+import { MapPin, Phone, Mail, Clock, Car, Plane, Star, Heart, MessageCircle, Users, Headphones } from "lucide-react"
 import Image from "next/image"
 import { useEffect, useRef, useState } from "react"
 
@@ -18,7 +18,7 @@ export function ContactSection() {
           }
         })
       },
-      { threshold: 0.2 }
+      { threshold: 0.1, rootMargin: '20px' }
     )
 
     if (sectionRef.current) {
@@ -30,41 +30,54 @@ export function ContactSection() {
 
   return (
     <div ref={sectionRef} className="min-h-screen pt-20 pb-16 relative overflow-hidden">
-      {/* Enhanced Background */}
+      {/* Enhanced Background with People Contacting Theme */}
       <div className="absolute inset-0 z-0">
-        <Image
-          src="/decorations/Screenshot 2025-06-25 010036 (1) (1) (1).png"
-          alt="Contact Us Background"
-          fill
-          style={{ objectFit: 'cover' }}
-          className="z-0 opacity-30"
-          priority
-        />
-        <div className="absolute inset-0 bg-gradient-to-br from-blue-900/40 via-purple-900/30 to-pink-900/40" />
+        <div className="absolute inset-0 bg-gradient-to-br from-blue-900 via-purple-900 to-indigo-900"></div>
         
-        {/* Floating Elements */}
-        <div className="absolute top-20 left-10 animate-float">
-          <Star className="w-8 h-8 text-yellow-300 opacity-60" />
+        {/* Animated Communication Icons */}
+        <div className="absolute inset-0 overflow-hidden">
+          <div className="absolute top-20 left-10 animate-bounce" style={{ animationDelay: '0s', animationDuration: '3s' }}>
+            <MessageCircle className="w-12 h-12 text-blue-300 opacity-20" />
+          </div>
+          <div className="absolute top-40 right-20 animate-bounce" style={{ animationDelay: '1s', animationDuration: '2.5s' }}>
+            <Phone className="w-10 h-10 text-green-300 opacity-25" />
+          </div>
+          <div className="absolute bottom-32 left-16 animate-bounce" style={{ animationDelay: '2s', animationDuration: '3.5s' }}>
+            <Mail className="w-14 h-14 text-yellow-300 opacity-20" />
+          </div>
+          <div className="absolute top-60 left-1/2 animate-bounce" style={{ animationDelay: '0.5s', animationDuration: '2.8s' }}>
+            <Users className="w-16 h-16 text-purple-300 opacity-15" />
+          </div>
+          <div className="absolute bottom-40 right-32 animate-bounce" style={{ animationDelay: '1.5s', animationDuration: '3.2s' }}>
+            <Headphones className="w-11 h-11 text-pink-300 opacity-20" />
+          </div>
         </div>
-        <div className="absolute top-40 right-20 animate-float" style={{ animationDelay: '1s' }}>
-          <Heart className="w-6 h-6 text-red-300 opacity-50" />
+
+        {/* Communication Pattern Overlay */}
+        <div className="absolute inset-0 opacity-10">
+          <div className="absolute top-1/4 left-1/4 w-32 h-32 rounded-full border-2 border-white animate-pulse"></div>
+          <div className="absolute top-3/4 right-1/4 w-24 h-24 rounded-full border-2 border-blue-300 animate-pulse" style={{ animationDelay: '1s' }}></div>
+          <div className="absolute top-1/2 left-1/2 w-40 h-40 rounded-full border border-purple-300 animate-pulse" style={{ animationDelay: '2s' }}></div>
         </div>
-        <div className="absolute bottom-32 left-16 animate-float" style={{ animationDelay: '2s' }}>
-          <MapPin className="w-7 h-7 text-blue-300 opacity-40" />
-        </div>
+        
+        {/* Subtle Grid Pattern */}
+        <div className="absolute inset-0 opacity-5" style={{
+          backgroundImage: `radial-gradient(circle at 2px 2px, white 1px, transparent 0)`,
+          backgroundSize: '60px 60px'
+        }}></div>
       </div>
 
       <div className="container mx-auto px-4 relative z-10">
         {/* Header */}
         <div className="text-center mb-16">
-          <h1 className={`text-5xl md:text-6xl font-bold text-white mb-6 font-display transition-all duration-1000 ${
-            isVisible ? 'animate-fade-in-up opacity-100' : 'opacity-0'
+          <h1 className={`text-5xl md:text-6xl font-bold text-white mb-6 font-display transition-all duration-500 ${
+            isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
           }`}>
             Contact Us
           </h1>
-          <p className={`text-xl text-gray-200 max-w-3xl mx-auto leading-relaxed transition-all duration-1000 delay-200 ${
-            isVisible ? 'animate-fade-in-up opacity-100' : 'opacity-0'
-          }`}>
+          <p className={`text-xl text-gray-200 max-w-3xl mx-auto leading-relaxed transition-all duration-700 ${
+            isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
+          }`} style={{ transitionDelay: '0.1s' }}>
             For bookings, questions, or special requests, please reach out to us. We look forward to welcoming you to paradise!
           </p>
         </div>
@@ -72,9 +85,9 @@ export function ContactSection() {
         {/* Contact Cards Grid */}
         <div className="max-w-6xl mx-auto mb-16 grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* Hotel Information */}
-          <Card className={`card-hover shadow-2xl border-0 bg-white/95 backdrop-blur-sm transition-all duration-1000 delay-400 ${
-            isVisible ? 'animate-fade-in-left opacity-100' : 'opacity-0'
-          }`}>
+          <Card className={`card-hover shadow-2xl border-0 bg-white/95 backdrop-blur-sm transition-all duration-600 ${
+            isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-8'
+          }`} style={{ transitionDelay: '0.2s' }}>
             <CardHeader className="bg-gradient-to-r from-red-600 to-orange-500 text-white rounded-t-lg">
               <CardTitle className="text-2xl font-bold flex items-center gap-3">
                 <MapPin className="w-6 h-6" />
@@ -132,9 +145,9 @@ export function ContactSection() {
           </Card>
 
           {/* Getting Here */}
-          <Card className={`card-hover shadow-2xl border-0 bg-white/95 backdrop-blur-sm transition-all duration-1000 delay-600 ${
-            isVisible ? 'animate-fade-in-right opacity-100' : 'opacity-0'
-          }`}>
+          <Card className={`card-hover shadow-2xl border-0 bg-white/95 backdrop-blur-sm transition-all duration-600 ${
+            isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-8'
+          }`} style={{ transitionDelay: '0.3s' }}>
             <CardHeader className="bg-gradient-to-r from-blue-600 to-purple-500 text-white rounded-t-lg">
               <CardTitle className="text-2xl font-bold flex items-center gap-3">
                 <Car className="w-6 h-6" />
@@ -185,9 +198,9 @@ export function ContactSection() {
         </div>
 
         {/* Call to Action */}
-        <div className={`text-center transition-all duration-1000 delay-800 ${
-          isVisible ? 'animate-fade-in-up opacity-100' : 'opacity-0'
-        }`}>
+        <div className={`text-center transition-all duration-700 ${
+          isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
+        }`} style={{ transitionDelay: '0.4s' }}>
           <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-8 max-w-2xl mx-auto border border-white/20">
             <h3 className="text-2xl font-bold text-white mb-4">Ready to Experience Kashmir?</h3>
             <p className="text-gray-200 mb-6">Contact us today to plan your perfect getaway in the heart of paradise.</p>
