@@ -8,14 +8,10 @@ import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js';
 import { cn } from '@/lib/utils';
 import { Loader2, AlertTriangle, Box } from 'lucide-react';
 
-// Enhanced performance detection
 const isHighEndDevice = () => {
   if (typeof window === 'undefined') return false;
-  
-  // WebGL 2.0 support check
   const canvas = document.createElement('canvas');
   const isWebGL2 = !!canvas.getContext('webgl2');
-  
   return (
     isWebGL2 &&
     (navigator.hardwareConcurrency || 4) > 4 &&
@@ -72,59 +68,48 @@ const ModelViewer: React.FC<ModelViewerProps> = ({
       currentMount.removeChild(currentMount.firstChild);
     }
     
-    let renderer: THREE.WebGLRenderer;
-    let animationFrameId: number;
-    let scene: THREE.Scene;
-    let camera: THREE.PerspectiveCamera;
-    let controls: OrbitControls;
-    let allModels: THREE.Group;
+    let renderer: THREE.WebGLRenderer | null = null;
+    let animationFrameId: number | null = null;
+    let scene: THREE.Scene | null = null;
+    let camera: THREE.PerspectiveCamera | null = null;
+    let controls: OrbitControls | null = null;
+    let allModels: THREE.Group | null = null;
 
     try {
       const highEnd = isHighEndDevice();
       scene = new THREE.Scene();
       
-      // ======================
-      // OPTIMIZED LIGHTING SYSTEM
-      // ======================
-      
-      // 1. Ambient Light (Always present)
+      // Lighting setup
       const ambientLight = new THREE.AmbientLight(0xffffff, highEnd ? 0.8 : 0.9);
       scene.add(ambientLight);
       
-      // 2. Main Directional Light (Always present)
       const mainLight = new THREE.DirectionalLight(0xfffaf0, highEnd ? 1.5 : 1.2);
       mainLight.position.set(15, 25, 15);
       if (highEnd) {
         mainLight.castShadow = true;
-        mainLight.shadow.mapSize.width = 1024; // Reduced from 2048
+        mainLight.shadow.mapSize.width = 1024;
         mainLight.shadow.mapSize.height = 1024;
         mainLight.shadow.camera.near = 0.5;
-        mainLight.shadow.camera.far = 50; // Reduced from 100
+        mainLight.shadow.camera.far = 50;
         mainLight.shadow.bias = -0.001;
       }
       scene.add(mainLight);
 
-      // 3. Key Fill Light (Always present)
       const fillLight = new THREE.DirectionalLight(0xffd700, highEnd ? 0.9 : 0.7);
       fillLight.position.set(-10, 10, -15);
       scene.add(fillLight);
       
-      // Only add these on high-end devices
       if (highEnd) {
-        // 4. Rim Light (High-end only)
         const rimLight = new THREE.DirectionalLight(0xffffff, 0.6);
         rimLight.position.set(0, 15, -20);
         scene.add(rimLight);
         
-        // 5. Accent Light (High-end only)
         const accentLight = new THREE.PointLight(0xff6b6b, 0.8, 25);
         accentLight.position.set(10, 5, 10);
         scene.add(accentLight);
       }
 
-      // ======================
-      // RENDERER SETUP
-      // ======================
+      // Renderer setup
       renderer = new THREE.WebGLRenderer({
         antialias: highEnd,
         powerPreference: highEnd ? "high-performance" : "low-power",
@@ -139,9 +124,7 @@ const ModelViewer: React.FC<ModelViewerProps> = ({
       renderer.outputColorSpace = THREE.SRGBColorSpace;
       currentMount.appendChild(renderer.domElement);
 
-      // ======================
-      // CAMERA & CONTROLS
-      // ======================
+      // Camera & Controls
       camera = new THREE.PerspectiveCamera(
         50,
         currentMount.clientWidth / currentMount.clientHeight,
@@ -161,9 +144,7 @@ const ModelViewer: React.FC<ModelViewerProps> = ({
       controls.minDistance = 15;
       controls.maxDistance = 50;
 
-      // ======================
-      // MODEL LOADING
-      // ======================
+      // Model Loading
       const loader = new GLTFLoader();
       const dracoLoader = new DRACOLoader();
       dracoLoader.setDecoderPath('https://www.gstatic.com/draco/v1/decoders/');
@@ -173,11 +154,10 @@ const ModelViewer: React.FC<ModelViewerProps> = ({
       const startTime = Date.now();
 
       loader.load(
-        modelUrls[0], // Assuming single model for optimization
+        modelUrls[0],
         (gltf) => {
           const model = gltf.scene;
           
-          // Optimized model processing
           model.traverse((node) => {
             if (node instanceof THREE.Mesh) {
               node.castShadow = highEnd;
@@ -205,7 +185,7 @@ const ModelViewer: React.FC<ModelViewerProps> = ({
           model.scale.set(5, 5, 5);
           model.position.set(0, -2, 0);
           allModels.add(model);
-          scene.add(allModels);
+          scene?.add(allModels);
 
           const elapsedTime = Date.now() - startTime;
           const remainingTime = Math.max(0, loadingDuration - elapsedTime);
@@ -224,16 +204,15 @@ const ModelViewer: React.FC<ModelViewerProps> = ({
         }
       );
 
-      // ======================
-      // ANIMATION LOOP
-      // ======================
+      // Animation loop
       const animate = () => {
         animationFrameId = requestAnimationFrame(animate);
         
-        controls.autoRotate = animationsEnabled;
-        controls.update();
+        if (controls) {
+          controls.autoRotate = animationsEnabled;
+          controls.update();
+        }
         
-        // Simple optimized animation
         if (allModels?.children?.[0] && animationsEnabled) {
           const model = allModels.children[0];
           const time = Date.now() * 0.001;
@@ -241,15 +220,15 @@ const ModelViewer: React.FC<ModelViewerProps> = ({
           model.rotation.y = time * 0.3;
         }
         
-        renderer.render(scene, camera);
+        if (scene && camera && renderer) {
+          renderer.render(scene, camera);
+        }
       };
       animate();
 
-      // ======================
-      // EVENT HANDLERS
-      // ======================
+      // Event handlers
       const handleResize = () => {
-        if (!currentMount) return;
+        if (!currentMount || !camera || !renderer) return;
         camera.aspect = currentMount.clientWidth / currentMount.clientHeight;
         camera.updateProjectionMatrix();
         renderer.setSize(currentMount.clientWidth, currentMount.clientHeight);
@@ -261,34 +240,48 @@ const ModelViewer: React.FC<ModelViewerProps> = ({
         setIsLoading(false);
       }, false);
 
-      // ======================
-      // CLEANUP
-      // ======================
+      // Cleanup function
       return () => {
         window.removeEventListener('resize', handleResize);
-        cancelAnimationFrame(animationFrameId);
         
-        if (renderer) {
-          currentMount?.removeChild(renderer.domElement);
+        if (animationFrameId) {
+          cancelAnimationFrame(animationFrameId);
+        }
+        
+        if (renderer && currentMount) {
+          currentMount.removeChild(renderer.domElement);
           renderer.dispose();
         }
         
-        controls?.dispose();
+        if (controls) {
+          controls.dispose();
+        }
         
-        // Cleanup lights
-        scene.traverse(obj => {
-          if (obj instanceof THREE.Light) {
-            scene.remove(obj);
-            if (obj.dispose) obj.dispose();
+        // Safe cleanup of scene contents
+        if (scene) {
+          // Remove all lights
+          scene.children.forEach(child => {
+            if (child instanceof THREE.Light) {
+              scene?.remove(child);
+              if ('dispose' in child) {
+                (child as any).dispose();
+              }
+            }
+          });
+          
+          // Dispose models
+          if (allModels) {
+            allModels.traverse(obj => {
+              if (obj instanceof THREE.Mesh) {
+                obj.geometry?.dispose();
+                const materials = Array.isArray(obj.material) 
+                  ? obj.material 
+                  : [obj.material];
+                materials.forEach(m => m.dispose && m.dispose());
+              }
+            });
           }
-          if (obj instanceof THREE.Mesh) {
-            obj.geometry?.dispose();
-            const materials = Array.isArray(obj.material) 
-              ? obj.material 
-              : [obj.material];
-            materials.forEach(m => m.dispose());
-          }
-        });
+        }
       };
     } catch (err) {
       console.error('Render error:', err);
