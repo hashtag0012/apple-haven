@@ -35,7 +35,7 @@ const ModelViewer: React.FC<ModelViewerProps> = ({
   onLoaded, 
   loadingDuration = 1000,
   fallbackImage = "/images/fallback.jpg",
-  backgroundImage = "/images/orchard-background.jpg"
+  backgroundImage = "/images/unnamed (1).jpg" // Make sure this path is correct
 }) => {
   const mountRef = useRef<HTMLDivElement>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -46,7 +46,15 @@ const ModelViewer: React.FC<ModelViewerProps> = ({
   const [webGLLost, setWebGLLost] = useState(false);
 
   useEffect(() => {
-    // WebGL availability check
+    // First verify the background image exists
+    const img = new Image();
+    img.src = backgroundImage;
+    img.onerror = () => {
+      console.error(`Background image not found at: ${backgroundImage}`);
+      setError('Background image missing');
+    };
+
+    // Then handle WebGL initialization
     const canvas = document.createElement('canvas');
     const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
     if (!gl) {
@@ -78,7 +86,6 @@ const ModelViewer: React.FC<ModelViewerProps> = ({
     let camera: THREE.PerspectiveCamera | null = null;
     let controls: OrbitControls | null = null;
     let allModels: THREE.Group | null = null;
-    let backgroundTexture: THREE.Texture | null = null;
 
     const handleContextLost = (event: Event) => {
       event.preventDefault();
@@ -86,11 +93,6 @@ const ModelViewer: React.FC<ModelViewerProps> = ({
       setError('WebGL context lost. Please refresh the page.');
       setIsLoading(false);
       cleanup();
-    };
-
-    const handleContextRestored = () => {
-      setWebGLLost(false);
-      // Optionally attempt to reinitialize here
     };
 
     const cleanup = () => {
@@ -102,7 +104,6 @@ const ModelViewer: React.FC<ModelViewerProps> = ({
       
       if (renderer) {
         renderer.domElement.removeEventListener('webglcontextlost', handleContextLost);
-        renderer.domElement.removeEventListener('webglcontextrestored', handleContextRestored);
         
         if (currentMount && renderer.domElement.parentNode === currentMount) {
           currentMount.removeChild(renderer.domElement);
@@ -112,10 +113,6 @@ const ModelViewer: React.FC<ModelViewerProps> = ({
       
       if (controls) {
         controls.dispose();
-      }
-      
-      if (backgroundTexture) {
-        backgroundTexture.dispose();
       }
       
       if (scene) {
@@ -142,16 +139,26 @@ const ModelViewer: React.FC<ModelViewerProps> = ({
       const highEnd = isHighEndDevice();
       scene = new THREE.Scene();
       
-      // Add background texture if provided
-      if (backgroundImage) {
-        backgroundTexture = new THREE.TextureLoader().load(backgroundImage, () => {
-          if (scene && backgroundTexture) {
-            scene.background = backgroundTexture;
-          }
-        });
+      // Set up renderer with transparency
+      renderer = new THREE.WebGLRenderer({
+        antialias: highEnd,
+        powerPreference: highEnd ? "high-performance" : "low-power",
+        alpha: true // Critical for background visibility
+      });
+      renderer.setClearColor(0x000000, 0); // Fully transparent
+      renderer.setSize(currentMount.clientWidth, currentMount.clientHeight);
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, highEnd ? 1.5 : 1));
+      if (highEnd) {
+        renderer.shadowMap.enabled = true;
+        renderer.shadowMap.type = THREE.PCFSoftShadowMap;
       }
-      
-      // Lighting setup
+      renderer.outputColorSpace = THREE.SRGBColorSpace;
+      currentMount.appendChild(renderer.domElement);
+
+      // Add context loss handler
+      renderer.domElement.addEventListener('webglcontextlost', handleContextLost, false);
+
+      // Optimized lighting setup
       const ambientLight = new THREE.AmbientLight(0xffffff, highEnd ? 0.8 : 0.9);
       scene.add(ambientLight);
       
@@ -161,9 +168,6 @@ const ModelViewer: React.FC<ModelViewerProps> = ({
         mainLight.castShadow = true;
         mainLight.shadow.mapSize.width = 1024;
         mainLight.shadow.mapSize.height = 1024;
-        mainLight.shadow.camera.near = 0.5;
-        mainLight.shadow.camera.far = 50;
-        mainLight.shadow.bias = -0.001;
       }
       scene.add(mainLight);
 
@@ -181,26 +185,7 @@ const ModelViewer: React.FC<ModelViewerProps> = ({
         scene.add(accentLight);
       }
 
-      // Renderer setup
-      renderer = new THREE.WebGLRenderer({
-        antialias: highEnd,
-        powerPreference: highEnd ? "high-performance" : "low-power",
-        alpha: !backgroundImage // Only use alpha if no background image
-      });
-      renderer.setSize(currentMount.clientWidth, currentMount.clientHeight);
-      renderer.setPixelRatio(Math.min(window.devicePixelRatio, highEnd ? 1.5 : 1));
-      if (highEnd) {
-        renderer.shadowMap.enabled = true;
-        renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-      }
-      renderer.outputColorSpace = THREE.SRGBColorSpace;
-      currentMount.appendChild(renderer.domElement);
-
-      // Add context loss handlers
-      renderer.domElement.addEventListener('webglcontextlost', handleContextLost, false);
-      renderer.domElement.addEventListener('webglcontextrestored', handleContextRestored, false);
-
-      // Camera & Controls
+      // Camera setup
       camera = new THREE.PerspectiveCamera(
         50,
         currentMount.clientWidth / currentMount.clientHeight,
@@ -209,6 +194,7 @@ const ModelViewer: React.FC<ModelViewerProps> = ({
       );
       camera.position.set(0, 15, 25);
 
+      // Controls setup
       controls = new OrbitControls(camera, renderer.domElement);
       controls.enableDamping = true;
       controls.dampingFactor = 0.05;
@@ -220,7 +206,7 @@ const ModelViewer: React.FC<ModelViewerProps> = ({
       controls.minDistance = 15;
       controls.maxDistance = 50;
 
-      // Model Loading
+      // Model loading
       const loader = new GLTFLoader();
       const dracoLoader = new DRACOLoader();
       dracoLoader.setDecoderPath('https://www.gstatic.com/draco/v1/decoders/');
@@ -314,13 +300,24 @@ const ModelViewer: React.FC<ModelViewerProps> = ({
   }, [modelUrls, loadingDuration, backgroundImage]);
 
   return (
-    <div className={cn("relative w-full h-full overflow-hidden", className)} style={{
-      backgroundImage: showFallback || webGLLost ? `url(${fallbackImage})` : 'none',
-      backgroundSize: 'cover',
-      backgroundPosition: 'center'
-    }}>
-      {showFallback || webGLLost ? (
-        <div className="w-full h-full flex flex-col items-center justify-center bg-black/50">
+    <div className={cn("relative w-full h-full overflow-hidden", className)}>
+      {/* Background image layer */}
+      <div 
+        className="absolute inset-0 z-0"
+        style={{
+          backgroundImage: `url(${backgroundImage})`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          backgroundRepeat: 'no-repeat'
+        }}
+      />
+      
+      {/* WebGL container (transparent) */}
+      <div ref={mountRef} className="absolute inset-0 z-10" style={{ backgroundColor: 'transparent' }} />
+      
+      {/* Fallback state */}
+      {(showFallback || webGLLost) && (
+        <div className="absolute inset-0 z-20 flex flex-col items-center justify-center bg-black/50">
           <p className="text-lg text-white/80 mb-4">3D model not available</p>
           <button 
             onClick={() => window.location.reload()}
@@ -329,19 +326,20 @@ const ModelViewer: React.FC<ModelViewerProps> = ({
             Refresh Page
           </button>
         </div>
-      ) : (
+      )}
+      
+      {/* Controls and loading states */}
+      {!(showFallback || webGLLost) && (
         <>
-          <div ref={mountRef} className="w-full h-full" />
-          
           <button
             onClick={() => setAnimationsEnabled(!animationsEnabled)}
-            className="absolute top-4 right-4 z-10 px-3 py-1.5 text-xs bg-black/70 text-white rounded-md hover:bg-black/90 transition-all backdrop-blur-sm border border-white/10 shadow-sm"
+            className="absolute top-4 right-4 z-30 px-3 py-1.5 text-xs bg-black/70 text-white rounded-md hover:bg-black/90 transition-all backdrop-blur-sm border border-white/10 shadow-sm"
           >
             {animationsEnabled ? "✋ Pause" : "▶️ Play"}
           </button>
           
           {isLoading && (
-            <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/50 backdrop-blur-[1px]">
+            <div className="absolute inset-0 z-20 flex flex-col items-center justify-center bg-black/50 backdrop-blur-[1px]">
               <div className="bg-white/90 rounded-lg p-4 shadow-sm">
                 <Loader2 className="h-6 w-6 animate-spin text-red-500 mb-2 mx-auto" />
                 <p className="text-xs text-gray-700">Loading model...</p>
@@ -356,7 +354,7 @@ const ModelViewer: React.FC<ModelViewerProps> = ({
           )}
           
           {error && !webGLLost && (
-            <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/70 backdrop-blur-[1px]">
+            <div className="absolute inset-0 z-20 flex flex-col items-center justify-center bg-black/70 backdrop-blur-[1px]">
               <AlertTriangle className="h-8 w-8 text-red-400 mb-3" />
               <p className="text-sm text-white/90 text-center px-4 max-w-xs">{error}</p>
               <button 
