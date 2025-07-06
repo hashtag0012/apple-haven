@@ -26,6 +26,7 @@ type ModelViewerProps = {
   onLoaded?: () => void;
   loadingDuration?: number;
   fallbackImage?: string;
+  backgroundImage?: string;
 };
 
 const ModelViewer: React.FC<ModelViewerProps> = ({ 
@@ -33,7 +34,8 @@ const ModelViewer: React.FC<ModelViewerProps> = ({
   className, 
   onLoaded, 
   loadingDuration = 1000,
-  fallbackImage = "/images/1_UjtUj9B7PqGvTWNuRll0Vw.jpg"
+  fallbackImage = "/images/fallback.jpg",
+  backgroundImage = "/images/orchard-background.jpg"
 }) => {
   const mountRef = useRef<HTMLDivElement>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -41,6 +43,7 @@ const ModelViewer: React.FC<ModelViewerProps> = ({
   const [animationsEnabled, setAnimationsEnabled] = useState(true);
   const [showFallback, setShowFallback] = useState(false);
   const [modelLoadProgress, setModelLoadProgress] = useState(0);
+  const [webGLLost, setWebGLLost] = useState(false);
 
   useEffect(() => {
     // WebGL availability check
@@ -62,6 +65,7 @@ const ModelViewer: React.FC<ModelViewerProps> = ({
 
     setIsLoading(true);
     setError(null);
+    setWebGLLost(false);
     
     // Clear previous canvas
     while (currentMount.firstChild) {
@@ -74,10 +78,78 @@ const ModelViewer: React.FC<ModelViewerProps> = ({
     let camera: THREE.PerspectiveCamera | null = null;
     let controls: OrbitControls | null = null;
     let allModels: THREE.Group | null = null;
+    let backgroundTexture: THREE.Texture | null = null;
+
+    const handleContextLost = (event: Event) => {
+      event.preventDefault();
+      setWebGLLost(true);
+      setError('WebGL context lost. Please refresh the page.');
+      setIsLoading(false);
+      cleanup();
+    };
+
+    const handleContextRestored = () => {
+      setWebGLLost(false);
+      // Optionally attempt to reinitialize here
+    };
+
+    const cleanup = () => {
+      window.removeEventListener('resize', handleResize);
+      
+      if (animationFrameId) {
+        cancelAnimationFrame(animationFrameId);
+      }
+      
+      if (renderer) {
+        renderer.domElement.removeEventListener('webglcontextlost', handleContextLost);
+        renderer.domElement.removeEventListener('webglcontextrestored', handleContextRestored);
+        
+        if (currentMount && renderer.domElement.parentNode === currentMount) {
+          currentMount.removeChild(renderer.domElement);
+        }
+        renderer.dispose();
+      }
+      
+      if (controls) {
+        controls.dispose();
+      }
+      
+      if (backgroundTexture) {
+        backgroundTexture.dispose();
+      }
+      
+      if (scene) {
+        scene.traverse(obj => {
+          if (obj instanceof THREE.Mesh) {
+            obj.geometry?.dispose();
+            const materials = Array.isArray(obj.material) 
+              ? obj.material 
+              : [obj.material];
+            materials.forEach(m => m.dispose?.());
+          }
+        });
+      }
+    };
+
+    const handleResize = () => {
+      if (!currentMount || !camera || !renderer) return;
+      camera.aspect = currentMount.clientWidth / currentMount.clientHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(currentMount.clientWidth, currentMount.clientHeight);
+    };
 
     try {
       const highEnd = isHighEndDevice();
       scene = new THREE.Scene();
+      
+      // Add background texture if provided
+      if (backgroundImage) {
+        backgroundTexture = new THREE.TextureLoader().load(backgroundImage, () => {
+          if (scene && backgroundTexture) {
+            scene.background = backgroundTexture;
+          }
+        });
+      }
       
       // Lighting setup
       const ambientLight = new THREE.AmbientLight(0xffffff, highEnd ? 0.8 : 0.9);
@@ -113,7 +185,7 @@ const ModelViewer: React.FC<ModelViewerProps> = ({
       renderer = new THREE.WebGLRenderer({
         antialias: highEnd,
         powerPreference: highEnd ? "high-performance" : "low-power",
-        alpha: true
+        alpha: !backgroundImage // Only use alpha if no background image
       });
       renderer.setSize(currentMount.clientWidth, currentMount.clientHeight);
       renderer.setPixelRatio(Math.min(window.devicePixelRatio, highEnd ? 1.5 : 1));
@@ -123,6 +195,10 @@ const ModelViewer: React.FC<ModelViewerProps> = ({
       }
       renderer.outputColorSpace = THREE.SRGBColorSpace;
       currentMount.appendChild(renderer.domElement);
+
+      // Add context loss handlers
+      renderer.domElement.addEventListener('webglcontextlost', handleContextLost, false);
+      renderer.domElement.addEventListener('webglcontextrestored', handleContextRestored, false);
 
       // Camera & Controls
       camera = new THREE.PerspectiveCamera(
@@ -226,81 +302,32 @@ const ModelViewer: React.FC<ModelViewerProps> = ({
       };
       animate();
 
-      // Event handlers
-      const handleResize = () => {
-        if (!currentMount || !camera || !renderer) return;
-        camera.aspect = currentMount.clientWidth / currentMount.clientHeight;
-        camera.updateProjectionMatrix();
-        renderer.setSize(currentMount.clientWidth, currentMount.clientHeight);
-      };
       window.addEventListener('resize', handleResize);
 
-      renderer.domElement.addEventListener('webglcontextlost', () => {
-        setError('Graphics context lost');
-        setIsLoading(false);
-      }, false);
-
-      // Cleanup function
-      return () => {
-        window.removeEventListener('resize', handleResize);
-        
-        if (animationFrameId) {
-          cancelAnimationFrame(animationFrameId);
-        }
-        
-        if (renderer && currentMount) {
-          currentMount.removeChild(renderer.domElement);
-          renderer.dispose();
-        }
-        
-        if (controls) {
-          controls.dispose();
-        }
-        
-        // Safe cleanup of scene contents
-        if (scene) {
-          // Remove all lights
-          scene.children.forEach(child => {
-            if (child instanceof THREE.Light) {
-              scene?.remove(child);
-              if ('dispose' in child) {
-                (child as any).dispose();
-              }
-            }
-          });
-          
-          // Dispose models
-          if (allModels) {
-            allModels.traverse(obj => {
-              if (obj instanceof THREE.Mesh) {
-                obj.geometry?.dispose();
-                const materials = Array.isArray(obj.material) 
-                  ? obj.material 
-                  : [obj.material];
-                materials.forEach(m => m.dispose && m.dispose());
-              }
-            });
-          }
-        }
-      };
+      return cleanup;
     } catch (err) {
       console.error('Render error:', err);
       setError("Failed to initialize 3D viewer");
       setIsLoading(false);
+      cleanup();
     }
-  }, [modelUrls, loadingDuration]);
+  }, [modelUrls, loadingDuration, backgroundImage]);
 
   return (
-    <div className={cn("relative w-full h-full overflow-hidden bg-black", className)}>
-      {showFallback ? (
-        <div className="w-full h-full flex flex-col items-center justify-center">
-          <img
-            src={fallbackImage}
-            alt="Fallback for 3D model"
-            className="w-full h-full object-cover"
-            loading="lazy"
-          />
-          <p className="mt-4 text-lg text-white/80">3D model not supported</p>
+    <div className={cn("relative w-full h-full overflow-hidden", className)} style={{
+      backgroundImage: showFallback || webGLLost ? `url(${fallbackImage})` : 'none',
+      backgroundSize: 'cover',
+      backgroundPosition: 'center'
+    }}>
+      {showFallback || webGLLost ? (
+        <div className="w-full h-full flex flex-col items-center justify-center bg-black/50">
+          <p className="text-lg text-white/80 mb-4">3D model not available</p>
+          <button 
+            onClick={() => window.location.reload()}
+            className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors"
+          >
+            Refresh Page
+          </button>
         </div>
       ) : (
         <>
@@ -328,7 +355,7 @@ const ModelViewer: React.FC<ModelViewerProps> = ({
             </div>
           )}
           
-          {error && (
+          {error && !webGLLost && (
             <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/70 backdrop-blur-[1px]">
               <AlertTriangle className="h-8 w-8 text-red-400 mb-3" />
               <p className="text-sm text-white/90 text-center px-4 max-w-xs">{error}</p>
