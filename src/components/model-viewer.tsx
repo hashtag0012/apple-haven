@@ -36,7 +36,7 @@ const ModelViewer: React.FC<ModelViewerProps> = ({
   loadingDuration = 1000,
   fallbackImage = "/images/fallback.jpg",
   backgroundImage = "/images/unnamed (1).jpg" // Make sure this path is correct
-}) => {
+}) => { 
   const mountRef = useRef<HTMLDivElement>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -44,6 +44,7 @@ const ModelViewer: React.FC<ModelViewerProps> = ({
   const [showFallback, setShowFallback] = useState(false);
   const [modelLoadProgress, setModelLoadProgress] = useState(0);
   const [webGLLost, setWebGLLost] = useState(false);
+  const [modelFullyLoaded, setModelFullyLoaded] = useState(false);
 
   useEffect(() => {
     // First verify the background image exists
@@ -249,13 +250,10 @@ const ModelViewer: React.FC<ModelViewerProps> = ({
           allModels.add(model);
           scene?.add(allModels);
 
-          const elapsedTime = Date.now() - startTime;
-          const remainingTime = Math.max(0, loadingDuration - elapsedTime);
-          
-          setTimeout(() => {
-            setIsLoading(false);
-            onLoaded?.();
-          }, remainingTime);
+          // Mark model as fully loaded
+          setModelFullyLoaded(true);
+          setIsLoading(false);
+          onLoaded?.();
         },
         (progress) => {
           setModelLoadProgress((progress.loaded / progress.total) * 100);
@@ -278,9 +276,9 @@ const ModelViewer: React.FC<ModelViewerProps> = ({
         if (allModels?.children?.[0] && animationsEnabled) {
           const model = allModels.children[0];
           const time = Date.now() * 0.001;
-          model.position.y = Math.sin(time * 1.5) * 0.8; // Increased bounce
-          model.rotation.y = time * 0.4; // Faster rotation
-          model.scale.setScalar(1 + Math.sin(time * 2) * 0.05); // Added scale bounce
+          model.position.y = Math.sin(time * 1.8) * 1.2; // Even more bounce
+          model.rotation.y = time * 0.5; // Faster rotation
+          model.scale.setScalar(1 + Math.sin(time * 2.5) * 0.08); // More scale bounce
         }
         
         if (scene && camera && renderer) {
@@ -343,13 +341,14 @@ const ModelViewer: React.FC<ModelViewerProps> = ({
             <div className="absolute inset-0 z-20 flex flex-col items-center justify-center bg-black/50 backdrop-blur-[1px]">
               <div className="bg-white/90 rounded-lg p-4 shadow-sm">
                 <Loader2 className="h-6 w-6 animate-spin text-red-500 mb-2 mx-auto" />
-                <p className="text-xs text-gray-700">Loading model...</p>
+                <p className="text-xs text-gray-700">Loading 3D Apple Model...</p>
                 <div className="w-24 bg-gray-200 rounded-full h-1.5 mt-1.5">
                   <div 
                     className="bg-red-500 h-1.5 rounded-full"
                     style={{ width: `${modelLoadProgress}%` }}
                   />
                 </div>
+                <p className="text-xs text-gray-500 mt-1">{Math.round(modelLoadProgress)}%</p>
               </div>
             </div>
           )}

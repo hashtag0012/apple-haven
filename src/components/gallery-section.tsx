@@ -25,6 +25,26 @@ const galleryImages = [
     title: "Side View of Cottage",
     description: "Scenic side view of the cottage"
   },
+  {
+    src: "/images/WhatsApp Image 2025-06-29 at 16.01.44_9ab931a8.jpg",
+    title: "Heritage Royal Suite - Interior",
+    description: "Luxurious interior of our Heritage Royal Suite"
+  },
+  {
+    src: "/images/WhatsApp Image 2025-06-29 at 16.01.44_a20e0aec.jpg",
+    title: "Heritage Royal Suite - Bedroom",
+    description: "Comfortable bedroom with traditional decor"
+  },
+  {
+    src: "/images/WhatsApp Image 2025-06-29 at 16.01.39_bb472265.jpg",
+    title: "Heritage Royal Suite - Living Area",
+    description: "Spacious living area with mountain views"
+  },
+  {
+    src: "/images/WhatsApp Image 2025-06-29 at 16.01.44_8bd677ed.jpg",
+    title: "Heritage Royal Suite - Balcony View",
+    description: "Breathtaking valley views from the balcony"
+  },
 ];
 
 export function GallerySection() {

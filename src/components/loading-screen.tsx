@@ -16,17 +16,17 @@ export function LoadingScreen({ onFinish }: { onFinish?: () => void }) {
           clearInterval(progressInterval)
           return 100
         }
-        return prev + Math.random() * 25 + 10 // Faster increments
+        return prev + Math.random() * 15 + 5 // Slower increments for longer loading
       })
-    }, 80) // Reduced interval for smoother animation
+    }, 120) // Increased interval for longer duration
 
-    // Even faster slide out
+    // Increased loading time to allow 3D model to load
     timeoutRef.current = setTimeout(() => {
       setSlideOut(true)
       setTimeout(() => {
         onFinish?.()
-      }, 400)
-    }, 1200) // Further reduced to 1.2s
+      }, 600)
+    }, 4500) // Increased to 4.5 seconds for 3D model loading
 
     return () => {
       if (timeoutRef.current) clearTimeout(timeoutRef.current)

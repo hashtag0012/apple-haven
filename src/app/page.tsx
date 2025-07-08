@@ -106,14 +106,14 @@ export default function AppleHavenInn() {
           <div className="absolute inset-0 z-5">
             <Suspense fallback={
               <div className="w-full h-full flex items-center justify-center">
-                <div className="text-white text-lg">Loading 3D Experience...</div>
+                <div className="text-white text-lg animate-pulse">Preparing 3D Apple Model...</div>
               </div>
             }>
               <ModelViewer
                 modelUrls={["/models/countryside/kashmiri_apple_very_r_0629101439_texture.glb"]}
                 onLoaded={handleModelLoaded}
                 className="border-0"
-                loadingDuration={3000} // Sync with loading screen
+                loadingDuration={4000} // Increased to sync with longer loading screen
               />
             </Suspense>
           </div>

@@ -17,7 +17,8 @@ export function RoomsSection() {
       id: 1,
       name: "Orchard View Deluxe",
       price: "₹4,500",
-      image: "/placeholder.svg?height=400&width=600&text=Orchard+View+Room",
+      image: null,
+      comingSoon: true,
       description: "Cozy room with stunning apple orchard views and traditional Kashmiri decor.",
       size: "25 sqm",
       occupancy: "2 guests",
@@ -32,7 +33,8 @@ export function RoomsSection() {
       id: 2,
       name: "Apple Blossom Suite",
       price: "₹7,500",
-      image: "/placeholder.svg?height=400&width=600&text=Apple+Blossom+Suite",
+      image: null,
+      comingSoon: true,
       description: "Spacious suite with panoramic mountain views and luxury amenities.",
       size: "40 sqm",
       occupancy: "3 guests",
@@ -209,13 +211,23 @@ export function RoomsSection() {
               </div>
             )
           })}
-        </div>
-
-        {/* All Rooms Include - Enhanced */}
-        <div className="mt-20 max-w-4xl mx-auto py-10">
-          <h3 className="text-3xl font-bold text-white text-center mb-10 drop-shadow-lg">All Rooms Include</h3>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8 text-center">
-            <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20 hover:bg-white/20 transition-all duration-300">
+                <div className="relative w-full h-48 flex items-center justify-center bg-gradient-to-br from-gray-100 to-gray-200 rounded-2xl shadow-md border border-white/20">
+                  {room.comingSoon ? (
+                    <div className="text-center p-6">
+                      <div className="text-4xl mb-3">📷</div>
+                      <h3 className="text-xl font-bold text-gray-700 mb-2">Images Coming Soon</h3>
+                      <p className="text-gray-600 text-sm">Professional photos of this beautiful room are being prepared</p>
+                    </div>
+                  ) : (
+                    <img
+                      src={room.image}
+                      alt={room.name}
+                      className="w-full h-48 object-cover rounded-2xl shadow-md border border-white/20 transition-all duration-500 ease-in-out hover:scale-105 hover:shadow-xl fade-in-section"
+                      style={{ display: 'block' }}
+                      loading="lazy"
+                    />
+                  )}
+                </div>
               <Wifi className="h-10 w-10 mx-auto mb-3 text-yellow-300" />
               <p className="font-semibold text-lg text-white">High-Speed Wi-Fi</p>
               <p className="text-sm text-gray-200">Stay connected with our complimentary Wi-Fi</p>
