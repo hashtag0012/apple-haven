@@ -119,13 +119,13 @@ export function Navigation({ onSectionChange, onBookingToggle }: NavigationProps
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
             >
               <div className="relative w-6 h-6">
-                <span className={`absolute top-1 left-0 w-6 h-0.5 bg-gray-600 transition-all duration-300 ${
+                <span className={`absolute top-1 left-0 w-6 h-0.5 bg-gray-800 transition-all duration-300 ${
                   isMobileMenuOpen ? 'rotate-45 translate-y-2' : ''
                 }`}></span>
-                <span className={`absolute top-3 left-0 w-6 h-0.5 bg-gray-600 transition-all duration-300 ${
+                <span className={`absolute top-3 left-0 w-6 h-0.5 bg-gray-800 transition-all duration-300 ${
                   isMobileMenuOpen ? 'opacity-0' : ''
                 }`}></span>
-                <span className={`absolute top-5 left-0 w-6 h-0.5 bg-gray-600 transition-all duration-300 ${
+                <span className={`absolute top-5 left-0 w-6 h-0.5 bg-gray-800 transition-all duration-300 ${
                   isMobileMenuOpen ? '-rotate-45 -translate-y-2' : ''
                 }`}></span>
               </div>

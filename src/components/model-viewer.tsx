@@ -278,8 +278,9 @@ const ModelViewer: React.FC<ModelViewerProps> = ({
         if (allModels?.children?.[0] && animationsEnabled) {
           const model = allModels.children[0];
           const time = Date.now() * 0.001;
-          model.position.y = Math.sin(time * 1.5) * 0.5;
-          model.rotation.y = time * 0.3;
+          model.position.y = Math.sin(time * 1.5) * 0.8; // Increased bounce
+          model.rotation.y = time * 0.4; // Faster rotation
+          model.scale.setScalar(1 + Math.sin(time * 2) * 0.05); // Added scale bounce
         }
         
         if (scene && camera && renderer) {

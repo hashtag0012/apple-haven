@@ -7,22 +7,22 @@ import { Camera, Image as ImageIcon, Aperture, Focus } from "lucide-react"
 const galleryImages = [
   {
     src: "/gallery/WhatsApp Image 2025-06-29 at 16.01.46_a6a10a9c.jpg",
-    title: "Front View of Cottage",
+    title: "Front View of Cottage", 
     description: "Beautiful front facade of Apple Haven Inn"
   },
   {
     src: "/gallery/WhatsApp Image 2025-06-29 at 16.01.45_9ff550a7.jpg", 
     title: "Welcome Refreshments",
-    description: "Coffee, sugar and tea bottles arrangement"
+    description: "Coffee, sugar and tea bottles in a line"
   },
   {
     src: "/gallery/WhatsApp Image 2025-06-29 at 16.01.37_64bdfa53.jpg",
-    title: "Garden Flowers",
+    title: "Garden Flowers", 
     description: "Beautiful flowers in our garden"
   },
   {
     src: "/gallery/WhatsApp Image 2025-06-29 at 16.01.36_d868f42a.jpg",
-    title: "Side View of Cottage", 
+    title: "Side View of Cottage",
     description: "Scenic side view of the cottage"
   },
 ];

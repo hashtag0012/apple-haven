@@ -25,8 +25,8 @@ export function LoadingScreen({ onFinish }: { onFinish?: () => void }) {
       setSlideOut(true)
       setTimeout(() => {
         onFinish?.()
-      }, 500)
-    }, 2000) // Reduced from 3000 to 2000
+      }, 400)
+    }, 1500) // Reduced to 1.5s for faster loading
 
     return () => {
       if (timeoutRef.current) clearTimeout(timeoutRef.current)

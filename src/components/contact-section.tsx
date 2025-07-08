@@ -45,8 +45,8 @@ export function ContactSection() {
           <div className="absolute bottom-32 left-16 animate-bounce" style={{ animationDelay: '2s', animationDuration: '3.5s' }}>
             <Mail className="w-14 h-14 text-yellow-300 opacity-20" />
           </div>
-          <div className="absolute top-60 left-1/2 animate-bounce" style={{ animationDelay: '0.5s', animationDuration: '2.8s' }}>
-            <Users className="w-16 h-16 text-purple-300 opacity-15" />
+        </div>
+      </div>
           </div>
           <div className="absolute bottom-40 right-32 animate-bounce" style={{ animationDelay: '1.5s', animationDuration: '3.2s' }}>
             <Headphones className="w-11 h-11 text-pink-300 opacity-20" />

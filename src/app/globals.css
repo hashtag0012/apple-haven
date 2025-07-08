@@ -353,6 +353,25 @@ html {
   scroll-behavior: smooth;
 }
 
+@keyframes wiggle {
+  0%, 100% { transform: rotate(0deg); }
+  25% { transform: rotate(1deg); }
+  75% { transform: rotate(-1deg); }
+}
+
+@keyframes heartbeat {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+
+.animate-wiggle {
+  animation: wiggle 0.5s ease-in-out;
+}
+
+.animate-heartbeat {
+  animation: heartbeat 1.2s ease-in-out infinite;
+}
+
 /* Performance optimizations */
 .gpu-accelerated {
   transform: translateZ(0);
@@ -367,16 +386,16 @@ html {
   }
   
   .card-hover:hover {
-    transform: translateY(-3px) scale(1.01);
+    transform: translateY(-2px) scale(1.005);
   }
   
   /* Reduce animations on mobile for better performance */
   .animate-float {
-    animation-duration: 3s;
+    animation-duration: 2s;
   }
   
   .animate-bounce-gentle {
-    animation-duration: 2.5s;
+    animation-duration: 2s;
   }
 }
 
