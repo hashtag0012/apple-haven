@@ -377,6 +377,17 @@ html {
   transform: translateZ(0);
   will-change: transform;
   backface-visibility: hidden;
+  transform-style: preserve-3d;
+}
+
+/* Optimize animations for better performance */
+@media (prefers-reduced-motion: no-preference) {
+  .animate-bounce-gentle,
+  .animate-float,
+  .animate-pulse-glow {
+    will-change: transform;
+    backface-visibility: hidden;
+  }
 }
 
 /* Mobile optimizations */
@@ -396,6 +407,12 @@ html {
   
   .animate-bounce-gentle {
     animation-duration: 2s;
+  }
+  
+  /* Disable expensive animations on mobile */
+  .animate-glow,
+  .animate-shimmer {
+    animation: none;
   }
 }
 

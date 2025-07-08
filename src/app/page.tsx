@@ -17,15 +17,21 @@ import Image from "next/image"
 // Enhanced intersection observer for fade-in animations
 const useIntersectionObserver = () => {
   useEffect(() => {
+    // Use passive event listeners for better performance
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
             entry.target.classList.add('fade-in-visible')
+            // Unobserve after animation to reduce overhead
+            observer.unobserve(entry.target)
           }
         })
       },
-      { threshold: 0.1, rootMargin: '50px' }
+      { 
+        threshold: 0.05, // Reduced threshold for earlier trigger
+        rootMargin: '20px' // Reduced margin for better performance
+      }
     )
 
     const elements = document.querySelectorAll('.fade-in-section')

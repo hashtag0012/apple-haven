@@ -9,24 +9,24 @@ export function LoadingScreen({ onFinish }: { onFinish?: () => void }) {
   const timeoutRef = useRef<NodeJS.Timeout | null>(null)
 
   useEffect(() => {
-    // Faster progress animation
+    // Optimized progress animation with fewer updates
     const progressInterval = setInterval(() => {
       setProgress(prev => {
         if (prev >= 100) {
           clearInterval(progressInterval)
           return 100
         }
-        return prev + Math.random() * 20 + 8
+        return prev + Math.random() * 25 + 10 // Faster increments
       })
-    }, 100)
+    }, 80) // Reduced interval for smoother animation
 
-    // Faster slide out
+    // Even faster slide out
     timeoutRef.current = setTimeout(() => {
       setSlideOut(true)
       setTimeout(() => {
         onFinish?.()
       }, 400)
-    }, 1500) // Reduced to 1.5s for faster loading
+    }, 1200) // Further reduced to 1.2s
 
     return () => {
       if (timeoutRef.current) clearTimeout(timeoutRef.current)

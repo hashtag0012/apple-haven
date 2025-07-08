@@ -209,7 +209,7 @@ const ModelViewer: React.FC<ModelViewerProps> = ({
       // Model loading
       const loader = new GLTFLoader();
       const dracoLoader = new DRACOLoader();
-      dracoLoader.setDecoderPath('https://www.gstatic.com/draco/v1/decoders/');
+      dracoLoader.setDecoderPath('/draco/');
       loader.setDRACOLoader(dracoLoader);
 
       allModels = new THREE.Group();
